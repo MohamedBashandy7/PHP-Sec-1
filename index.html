@@ -1,0 +1,3181 @@
+<!doctype html>
+<html lang="ar">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Infinity Code — PHP Fundamentals</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+            rel="stylesheet" />
+        <style>
+            :root {
+                --scale: 1;
+                --bg: #0b0f19;
+                --surface: #121a2c;
+                --line: rgba(148, 163, 198, 0.14);
+                --text: #e9edf6;
+                --muted: #9aa7c2;
+                --faint: #5f6c8a;
+                --accent: #5b9bff;
+                --accent-dim: rgba(91, 155, 255, 0.1);
+                --violet: #b79cf6;
+                --violet-dim: rgba(183, 156, 246, 0.08);
+                --good: #4ed4a4;
+                --gold: #e6c07a;
+                --red: #e26a6a;
+                --orange: #f0975c;
+                --fs-hero: calc(54px * var(--scale));
+                --fs-title: calc(36px * var(--scale));
+                --fs-sub: calc(26px * var(--scale));
+                --fs-body: calc(21px * var(--scale));
+                --fs-ar: calc(20px * var(--scale));
+                --fs-code: calc(18px * var(--scale));
+                --fs-small: calc(16px * var(--scale));
+                --fs-nav: calc(14px * var(--scale));
+            }
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                height: 100%;
+            }
+            body {
+                font-family: "Cairo", "Inter", sans-serif;
+                background: var(--bg);
+                color: var(--text);
+                overflow: hidden;
+                -webkit-font-smoothing: antialiased;
+            }
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                z-index: 0;
+                pointer-events: none;
+                background:
+                    radial-gradient(
+                        900px 520px at 88% -12%,
+                        rgba(91, 155, 255, 0.06),
+                        transparent 60%
+                    ),
+                    radial-gradient(
+                        820px 620px at -12% 112%,
+                        rgba(183, 156, 246, 0.05),
+                        transparent 60%
+                    );
+            }
+            ::selection {
+                background: rgba(91, 155, 255, 0.3);
+            }
+            button {
+                font-family: inherit;
+            }
+            button:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 2px;
+            }
+
+            #prog {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 3px;
+                width: 0;
+                background: var(--accent);
+                z-index: 50;
+                transition: width 0.45s ease;
+                box-shadow: 0 0 12px rgba(91, 155, 255, 0.45);
+            }
+            #app {
+                position: fixed;
+                inset: 0;
+                display: flex;
+                flex-direction: column;
+                z-index: 1;
+            }
+            #topbar {
+                height: 58px;
+                flex: 0 0 58px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 22px;
+                border-bottom: 1px solid var(--line);
+                background: rgba(11, 15, 25, 0.72);
+                backdrop-filter: blur(8px);
+                position: relative;
+                z-index: 20;
+            }
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+            }
+            .logo {
+                width: 30px;
+                height: 30px;
+                border-radius: 9px;
+                background: var(--accent-dim);
+                border: 1px solid rgba(91, 155, 255, 0.35);
+                display: grid;
+                place-items: center;
+                flex: 0 0 auto;
+            }
+            .logo svg {
+                width: 18px;
+                height: 18px;
+                fill: var(--accent);
+            }
+            .brand-name {
+                font-family: "Poppins", "Cairo";
+                font-weight: 600;
+                letter-spacing: 0.22em;
+                font-size: 13.5px;
+            }
+            .brand-name b {
+                color: var(--accent);
+                font-weight: 700;
+            }
+            .brand-sub {
+                font-family: "JetBrains Mono", "Cairo";
+                font-size: 11px;
+                color: var(--faint);
+                letter-spacing: 0.08em;
+                border-left: 1px solid var(--line);
+                padding-left: 14px;
+                margin-left: 4px;
+            }
+            .sect-chip {
+                font-family: "Cairo";
+                font-size: 12px;
+                font-weight: 700;
+                color: var(--violet);
+                border: 1px dashed rgba(183, 156, 246, 0.4);
+                padding: 3px 13px;
+                border-radius: 999px;
+                white-space: nowrap;
+            }
+            .tb-right {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+            }
+            .counter {
+                font-family: "JetBrains Mono";
+                font-size: var(--fs-nav);
+                color: var(--muted);
+                letter-spacing: 0.1em;
+                margin-right: 8px;
+                min-width: 78px;
+                text-align: center;
+            }
+            .ibtn {
+                width: 34px;
+                height: 34px;
+                border-radius: 9px;
+                border: 1px solid var(--line);
+                background: rgba(148, 163, 198, 0.06);
+                color: var(--muted);
+                display: grid;
+                place-items: center;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+            .ibtn:hover {
+                color: var(--accent);
+                border-color: rgba(91, 155, 255, 0.4);
+            }
+            .ibtn svg {
+                width: 16px;
+                height: 16px;
+                stroke: currentColor;
+                fill: none;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+            #botbar {
+                height: 42px;
+                flex: 0 0 42px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 22px;
+                border-top: 1px solid var(--line);
+                color: var(--faint);
+                position: relative;
+                z-index: 20;
+            }
+            .f-left {
+                font-family: "Poppins", "Cairo";
+                letter-spacing: 0.1em;
+                font-size: 11px;
+            }
+            .f-left b {
+                color: var(--muted);
+            }
+            .f-hint {
+                font-family: "Cairo";
+                font-size: 11.5px;
+                color: #4e5c7e;
+            }
+            .f-right {
+                font-family: "Cairo";
+                font-size: 11.5px;
+                font-weight: 700;
+                color: var(--violet);
+            }
+            .navbtn {
+                position: fixed;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                border: 1px solid var(--line);
+                background: rgba(17, 24, 40, 0.72);
+                backdrop-filter: blur(6px);
+                color: var(--muted);
+                display: grid;
+                place-items: center;
+                cursor: pointer;
+                z-index: 25;
+                transition: 0.2s;
+            }
+            .navbtn:hover {
+                color: var(--accent);
+                border-color: rgba(91, 155, 255, 0.5);
+            }
+            .navbtn.prev {
+                left: 16px;
+            }
+            .navbtn.next {
+                right: 16px;
+            }
+            .navbtn svg {
+                width: 20px;
+                height: 20px;
+                stroke: currentColor;
+                fill: none;
+                stroke-width: 2.2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+            .navbtn[disabled] {
+                opacity: 0.22;
+                pointer-events: none;
+            }
+            #toast {
+                position: fixed;
+                bottom: 60px;
+                left: 50%;
+                transform: translate(-50%, 10px);
+                opacity: 0;
+                transition: 0.25s;
+                background: #151d31;
+                border: 1px solid var(--line);
+                color: var(--muted);
+                padding: 8px 18px;
+                border-radius: 999px;
+                font-family: "Cairo";
+                font-size: 12.5px;
+                z-index: 60;
+                pointer-events: none;
+            }
+            #toast.show {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+
+            #stage {
+                flex: 1;
+                position: relative;
+                min-height: 0;
+                z-index: 1;
+                overflow: hidden;
+            }
+            .slide {
+                position: absolute;
+                inset: 0;
+                margin: 0 auto;
+                max-width: 1480px;
+                padding: 26px 84px 18px;
+                display: flex;
+                flex-direction: column;
+                overflow-y: auto;
+                overflow-x: hidden;
+                scrollbar-width: thin;
+                scrollbar-color: #243049 transparent;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateX(56px);
+                z-index: 1;
+                transition:
+                    opacity 0.38s ease,
+                    transform 0.5s cubic-bezier(0.22, 0.7, 0.3, 1),
+                    visibility 0s linear 0.5s;
+            }
+            .slide::-webkit-scrollbar {
+                width: 10px;
+                height: 10px;
+            }
+            .slide::-webkit-scrollbar-thumb {
+                background: #243049;
+                border-radius: 8px;
+                border: 2px solid var(--bg);
+            }
+            .slide::-webkit-scrollbar-thumb:hover {
+                background: #3b4d75;
+            }
+            .slide::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .slide.pos-left {
+                transform: translateX(-56px);
+            }
+            .slide.active {
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                z-index: 2;
+                transition:
+                    opacity 0.45s ease,
+                    transform 0.55s cubic-bezier(0.22, 0.7, 0.3, 1),
+                    visibility 0s;
+            }
+            .s-head {
+                opacity: 0;
+                transform: translateY(10px);
+                flex: 0 0 auto;
+            }
+            .slide.active .s-head {
+                opacity: 1;
+                transform: none;
+                transition:
+                    opacity 0.5s ease,
+                    transform 0.55s cubic-bezier(0.22, 0.7, 0.3, 1);
+            }
+            .s-body {
+                flex: 1 1 auto;
+                min-height: max-content;
+                display: flex;
+                flex-direction: column;
+                margin-top: 16px;
+            }
+            .s-body > *,
+            .col > *,
+            .duo > * {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            .slide.active .s-body > *,
+            .slide.active .col > *,
+            .slide.active .duo > * {
+                opacity: 1;
+                transform: none;
+                transition:
+                    opacity 0.55s ease,
+                    transform 0.6s cubic-bezier(0.22, 0.7, 0.3, 1);
+                transition-delay: calc(var(--i, 0) * 70ms + 0.12s);
+            }
+            .slide:not(.active) :is(.s-body > *, .col > *, .duo > *) {
+                transition: none;
+            }
+
+            .kicker {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 10px;
+                flex-wrap: wrap;
+            }
+            .k-num {
+                font-family: "JetBrains Mono";
+                font-weight: 600;
+                font-size: calc(var(--fs-nav) * 0.9);
+                letter-spacing: 0.1em;
+                color: var(--accent);
+                background: var(--accent-dim);
+                border: 1px solid rgba(91, 155, 255, 0.3);
+                padding: 4px 14px;
+                border-radius: 999px;
+                white-space: nowrap;
+            }
+            .k-tag {
+                font-family: "Cairo";
+                font-weight: 700;
+                font-size: calc(var(--fs-nav) * 0.92);
+                color: var(--violet);
+                border: 1px dashed rgba(183, 156, 246, 0.45);
+                padding: 3px 13px;
+                border-radius: 999px;
+                white-space: nowrap;
+            }
+            .k-status {
+                font-family: "Cairo";
+                font-weight: 800;
+                font-size: calc(var(--fs-nav) * 0.92);
+                padding: 3px 13px;
+                border-radius: 999px;
+                white-space: nowrap;
+            }
+            .k-status.bad {
+                color: #ff8a80;
+                border: 1px solid rgba(226, 106, 106, 0.5);
+                background: rgba(226, 106, 106, 0.08);
+            }
+            .k-status.good {
+                color: var(--good);
+                border: 1px solid rgba(78, 212, 164, 0.5);
+                background: rgba(78, 212, 164, 0.08);
+            }
+            .k-line {
+                flex: 1;
+                height: 1px;
+                background: var(--line);
+                opacity: 0.7;
+                min-width: 40px;
+            }
+            .s-title {
+                font-family: "Cairo", "Poppins";
+                font-size: var(--fs-title);
+                font-weight: 800;
+                letter-spacing: -0.01em;
+                line-height: 1.25;
+                text-align: right;
+                direction: rtl;
+                unicode-bidi: plaintext;
+            }
+            .s-title .m {
+                font-family: "JetBrains Mono", monospace;
+                color: var(--accent);
+                font-size: 0.82em;
+                direction: ltr;
+                unicode-bidi: isolate;
+            }
+            .s-title .v {
+                font-family: "JetBrains Mono", monospace;
+                color: var(--violet);
+                font-size: 0.82em;
+                direction: ltr;
+                unicode-bidi: isolate;
+            }
+
+            .cols {
+                display: grid;
+                grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+                gap: 24px;
+                flex: 1;
+                min-height: 0;
+                margin-top: 16px;
+            }
+            .col {
+                min-height: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 13px;
+            }
+            .duo {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 18px;
+            }
+            .trio {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 14px;
+            }
+            .card {
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                padding: 15px 19px;
+                direction: rtl;
+            }
+            .dg-card {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .cap-row {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin-top: 11px;
+                flex-wrap: wrap;
+            }
+            .blk-label {
+                font-family: "Cairo";
+                font-weight: 800;
+                font-size: 12.5px;
+                letter-spacing: 0.06em;
+                color: var(--faint);
+                margin-bottom: 7px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex: 0 0 auto;
+                direction: rtl;
+            }
+            .blk-label::after {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: var(--line);
+            }
+            .blk-label.err {
+                color: #efa1a1;
+            }
+            .blk-label.err::after {
+                background: rgba(226, 106, 106, 0.3);
+            }
+            .blk-label.ok {
+                color: var(--good);
+            }
+            .blk-label.ok::after {
+                background: rgba(78, 212, 164, 0.3);
+            }
+            .blk-label.out {
+                color: var(--gold);
+            }
+            .blk-label.out::after {
+                background: rgba(230, 192, 122, 0.3);
+            }
+            .errslot {
+                flex: 0 1 auto;
+                min-height: 0;
+                display: flex;
+            }
+            .errslot .term {
+                flex: 1;
+                min-height: 0;
+            }
+            .errslot .term-body {
+                max-height: 150px;
+            }
+
+            .codebox {
+                background: #0a0e17;
+                border: 1px solid rgba(148, 163, 198, 0.18);
+                border-radius: 14px;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+                flex: 1;
+                box-shadow: 0 22px 44px -22px rgba(0, 0, 0, 0.65);
+            }
+            .col > .codebox {
+                flex: 1 1 auto;
+            }
+            .cb-bar {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 0 14px;
+                background: rgba(148, 163, 198, 0.07);
+                border-bottom: 1px solid rgba(148, 163, 198, 0.13);
+                flex: 0 0 auto;
+                min-height: 38px;
+            }
+            .cb-dots {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                flex: 0 0 auto;
+            }
+            .dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                opacity: 0.85;
+            }
+            .cb-tab {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 11.5px;
+                color: var(--text);
+                background: #0a0e17;
+                border: 1px solid rgba(148, 163, 198, 0.18);
+                border-bottom: none;
+                border-radius: 8px 8px 0 0;
+                padding: 7px 15px 8px;
+                position: relative;
+                white-space: nowrap;
+            }
+            .cb-tab::before {
+                content: "";
+                position: absolute;
+                inset: 0 0 auto 0;
+                height: 2px;
+                background: var(--accent);
+                border-radius: 2px 2px 0 0;
+            }
+            .cb-close {
+                color: var(--faint);
+                font-family: "JetBrains Mono";
+                font-size: 12px;
+                margin-left: 2px;
+            }
+            .cb-lang {
+                margin-left: auto;
+                font-family: "JetBrains Mono";
+                font-size: 10px;
+                letter-spacing: 0.16em;
+                color: var(--faint);
+                border: 1px solid var(--line);
+                padding: 2px 8px;
+                border-radius: 5px;
+            }
+            .cb-copy {
+                margin-left: 8px;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                color: var(--faint);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: 0.2s;
+                padding: 4px;
+                border-radius: 4px;
+            }
+            .cb-copy:hover {
+                color: var(--accent);
+                background: rgba(148, 163, 198, 0.1);
+            }
+            .cb-copy svg {
+                width: 14px;
+                height: 14px;
+                stroke: currentColor;
+                fill: none;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+            .cb-copy.copied {
+                color: var(--good);
+            }
+            .code-scroll {
+                flex: 1;
+                min-height: 0;
+                overflow: auto;
+                padding: 12px 10px;
+                scrollbar-width: thin;
+                scrollbar-color: #243049 transparent;
+            }
+            .code-scroll::-webkit-scrollbar {
+                width: 10px;
+                height: 10px;
+            }
+            .code-scroll::-webkit-scrollbar-thumb {
+                background: #243049;
+                border-radius: 8px;
+                border: 2px solid #0a0e17;
+            }
+            .code-scroll::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            pre {
+                margin: 0;
+            }
+            pre code {
+                font-family: "JetBrains Mono", monospace;
+                font-size: var(--fs-code);
+                line-height: 1.6;
+                display: block;
+                color: #d4ddec;
+                direction: ltr;
+                text-align: left;
+            }
+            .cl {
+                white-space: pre;
+                padding-right: 20px;
+                min-height: 1.6em;
+            }
+            .cl::before {
+                counter-increment: ln;
+                content: counter(ln, decimal-leading-zero);
+                display: inline-block;
+                width: 3.4ch;
+                margin-right: 18px;
+                text-align: right;
+                color: #39466a;
+                user-select: none;
+            }
+            .cl.hl {
+                background: rgba(91, 155, 255, 0.08);
+                box-shadow: inset 3px 0 0 0 var(--accent);
+            }
+            .cl.hl-red {
+                background: rgba(226, 106, 106, 0.08);
+                box-shadow: inset 3px 0 0 0 var(--red);
+            }
+            .tk-com {
+                color: #5c6c8f;
+                font-style: italic;
+            }
+            .tk-str {
+                color: #9ccf8f;
+            }
+            .tk-var {
+                color: #e8a15d;
+            }
+            .tk-kw {
+                color: #6fa8f5;
+            }
+            .tk-fn {
+                color: #e3c56b;
+            }
+            .tk-num {
+                color: #e890a0;
+            }
+            .tk-tag {
+                color: #5ad4e6;
+            }
+
+            .browser {
+                background: #0a0e17;
+                border: 1px solid rgba(148, 163, 198, 0.18);
+                border-radius: 12px;
+                overflow: hidden;
+                flex: 0 0 auto;
+            }
+            .br-bar {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 7px 12px;
+                background: rgba(148, 163, 198, 0.07);
+                border-bottom: 1px solid rgba(148, 163, 198, 0.12);
+            }
+            .br-url {
+                font-family: "JetBrains Mono";
+                font-size: 10.5px;
+                color: var(--muted);
+                background: rgba(148, 163, 198, 0.08);
+                border: 1px solid var(--line);
+                border-radius: 999px;
+                padding: 2px 14px;
+            }
+            .br-body {
+                background: #f4f6fa;
+                padding: 14px 18px;
+                min-height: 64px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 4px;
+            }
+            .br-line {
+                font-family: "JetBrains Mono", monospace;
+                font-size: calc(var(--fs-code) * 0.92);
+                color: #1e2a3e;
+                direction: ltr;
+                text-align: left;
+                white-space: pre-wrap;
+                line-height: 1.6;
+            }
+            .br-line b {
+                color: #0e1526;
+            }
+
+            .term {
+                background: #05070d;
+                border: 1px solid rgba(226, 106, 106, 0.35);
+                border-radius: 14px;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+                box-shadow: 0 22px 44px -22px rgba(0, 0, 0, 0.7);
+            }
+            .term-bar {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                padding: 8px 14px;
+                background: rgba(226, 106, 106, 0.07);
+                border-bottom: 1px solid rgba(226, 106, 106, 0.22);
+                flex: 0 0 auto;
+            }
+            .term-title {
+                font-family: "Cairo";
+                font-weight: 800;
+                font-size: 12px;
+                letter-spacing: 0.04em;
+                color: #efa1a1;
+                margin-left: 8px;
+            }
+            .term-badge {
+                margin-left: auto;
+                font-family: "JetBrains Mono";
+                font-size: 10px;
+                letter-spacing: 0.16em;
+                color: #ff8a80;
+                border: 1px solid rgba(226, 106, 106, 0.5);
+                padding: 2px 9px;
+                border-radius: 5px;
+                white-space: nowrap;
+            }
+            .term-body {
+                padding: 12px 18px;
+                font-family: "JetBrains Mono", monospace;
+                font-size: calc(var(--fs-small) * 0.88);
+                line-height: 1.8;
+                color: #c9d2e4;
+                direction: ltr;
+                text-align: left;
+                overflow: auto;
+                white-space: pre-wrap;
+                word-break: break-word;
+                flex: 1;
+                min-height: 0;
+            }
+            .t-red {
+                color: #ff7b72;
+                font-weight: 600;
+            }
+            .t-gold {
+                color: var(--gold);
+            }
+            .t-path {
+                color: #7e89a6;
+            }
+
+            p.ar {
+                font-family: "Cairo", sans-serif;
+                font-size: var(--fs-ar);
+                line-height: 1.95;
+                color: #dee6f4;
+                text-align: right;
+            }
+            p.ar + p.ar {
+                margin-top: 7px;
+            }
+            p.ar b {
+                color: #fff;
+            }
+            code.ic {
+                direction: ltr;
+                unicode-bidi: isolate;
+                font-family: "JetBrains Mono", monospace;
+                font-size: calc(var(--fs-code) * 0.85);
+                background: rgba(91, 155, 255, 0.1);
+                border: 1px solid rgba(91, 155, 255, 0.25);
+                color: #9cc3ff;
+                padding: 2px 8px;
+                border-radius: 6px;
+                vertical-align: middle;
+                display: inline-block;
+                line-height: 1;
+            }
+            code.ic.v {
+                background: rgba(183, 156, 246, 0.1);
+                border-color: rgba(183, 156, 246, 0.3);
+                color: var(--violet);
+            }
+            code.ic.st {
+                background: rgba(240, 151, 92, 0.1);
+                border-color: rgba(240, 151, 92, 0.3);
+                color: #f5b98c;
+            }
+            code.ic.g {
+                background: rgba(156, 207, 143, 0.1);
+                border-color: rgba(156, 207, 143, 0.3);
+                color: #9ccf8f;
+            }
+            .arcard {
+                background: rgba(91, 155, 255, 0.045);
+                border: 1px solid rgba(91, 155, 255, 0.18);
+                border-right: 3px solid var(--accent);
+                border-radius: 12px;
+                padding: 12px 16px;
+            }
+            .arcard .tag {
+                font-family: "Cairo";
+                font-weight: 800;
+                font-size: calc(var(--fs-nav) * 0.95);
+                color: var(--accent);
+                margin-bottom: 3px;
+            }
+            .note-key {
+                background: var(--accent-dim);
+                border: 1px solid rgba(91, 155, 255, 0.25);
+                border-right: 3px solid var(--accent);
+                border-radius: 12px;
+                padding: 11px 15px;
+                margin-top: 14px;
+            }
+            .note-key.gold {
+                background: rgba(230, 192, 122, 0.05);
+                border-color: rgba(230, 192, 122, 0.25);
+                border-right-color: var(--gold);
+            }
+            .note-key.viol {
+                background: var(--violet-dim);
+                border-color: rgba(183, 156, 246, 0.25);
+                border-right-color: var(--violet);
+            }
+            .note-key p {
+                font-family: "Cairo";
+                font-size: var(--fs-small);
+                color: #d5e1f2;
+                line-height: 1.85;
+                text-align: right;
+            }
+            .note-bad {
+                background: rgba(226, 106, 106, 0.06);
+                border: 1px solid rgba(226, 106, 106, 0.25);
+                border-right: 3px solid var(--red);
+                border-radius: 12px;
+                padding: 11px 15px;
+            }
+            .note-bad p {
+                font-family: "Cairo";
+                font-size: var(--fs-small);
+                color: #f0d5d5;
+                line-height: 1.85;
+                text-align: right;
+            }
+            .kc-label {
+                font-family: "Cairo";
+                font-weight: 800;
+                font-size: calc(var(--fs-nav) * 0.95);
+                color: var(--accent);
+                letter-spacing: 0.02em;
+                margin-bottom: 9px;
+                direction: rtl;
+                text-align: right;
+            }
+
+            .kc-label.v {
+                color: var(--violet);
+            }
+            .kc-label.g {
+                color: var(--gold);
+            }
+
+            .chips {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 12px;
+            }
+            .chip {
+                font-family: "JetBrains Mono", "Cairo", monospace;
+                font-size: var(--fs-small);
+                padding: 6px 14px;
+                border-radius: 8px;
+                border: 1px solid var(--line);
+                background: rgba(148, 163, 198, 0.07);
+                color: var(--text);
+                direction: ltr;
+                unicode-bidi: isolate;
+            }
+            .chip.ar {
+                font-family: "Cairo";
+                direction: rtl;
+            }
+            .chip.good {
+                border-color: rgba(78, 212, 164, 0.4);
+                background: rgba(78, 212, 164, 0.07);
+                color: var(--good);
+            }
+            .chip.bad {
+                border-color: rgba(226, 106, 106, 0.35);
+                background: rgba(226, 106, 106, 0.07);
+                color: #efa1a1;
+            }
+            .chip.gold {
+                border-color: rgba(230, 192, 122, 0.4);
+                background: rgba(230, 192, 122, 0.07);
+                color: var(--gold);
+            }
+            .chip.viol {
+                border-color: rgba(183, 156, 246, 0.4);
+                background: var(--violet-dim);
+                color: var(--violet);
+            }
+            .chip.blue {
+                border-color: rgba(91, 155, 255, 0.4);
+                background: var(--accent-dim);
+                color: #9cc3ff;
+            }
+            .snip {
+                display: inline-block;
+                font-family: "JetBrains Mono", monospace;
+                font-size: calc(var(--fs-code) * 0.92);
+                background: #0a0f1c;
+                border: 1px solid rgba(148, 163, 198, 0.3);
+                color: #d4ddec;
+                padding: 10px 16px;
+                border-radius: 9px;
+                direction: ltr;
+                margin-top: 8px;
+                text-align: left;
+                line-height: 1.7;
+                white-space: pre;
+            }
+            .snip.t {
+                border-color: rgba(91, 155, 255, 0.4);
+                color: #9cc3ff;
+            }
+            .snip.g {
+                border-color: rgba(156, 207, 143, 0.4);
+                color: #9ccf8f;
+            }
+
+            .node {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 3px;
+                background: #101830;
+                border: 1px solid rgba(148, 163, 198, 0.25);
+                border-radius: 12px;
+                padding: 11px 22px 13px;
+                text-align: center;
+            }
+            .n-main {
+                font-family: "Cairo";
+                font-weight: 700;
+                font-size: calc(var(--fs-code) * 0.95);
+                color: var(--text);
+                direction: rtl;
+            }
+            .n-main.mono {
+                font-family: "JetBrains Mono", monospace;
+                direction: ltr;
+                font-size: calc(var(--fs-code) * 0.88);
+                font-weight: 500;
+            }
+            .n-tag {
+                font-size: 10.5px;
+                letter-spacing: 0.1em;
+                color: var(--faint);
+                font-family: "JetBrains Mono", "Cairo";
+                font-weight: 600;
+                direction: ltr;
+            }
+            .node.n-class {
+                border-color: rgba(91, 155, 255, 0.45);
+                box-shadow: 0 10px 26px -16px rgba(91, 155, 255, 0.35);
+            }
+            .node.n-class .n-main {
+                color: #9cc3ff;
+            }
+            .node.n-obj {
+                border-color: rgba(230, 192, 122, 0.4);
+            }
+            .node.n-obj .n-main {
+                color: var(--gold);
+            }
+            .node.n-self {
+                border-color: rgba(183, 156, 246, 0.45);
+            }
+            .node.n-self .n-main {
+                color: var(--violet);
+            }
+            .node.n-abs {
+                border-color: rgba(240, 151, 92, 0.5);
+            }
+            .node.n-abs .n-main {
+                color: #f5b98c;
+            }
+            .node.n-lock {
+                border-color: rgba(226, 106, 106, 0.5);
+            }
+            .node.n-lock .n-main {
+                color: #ffa1a1;
+            }
+            .farr {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+                margin: 7px 0;
+            }
+            .farr svg {
+                width: 15px;
+                height: 26px;
+                stroke: var(--faint);
+                fill: none;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+            .farr .flabel {
+                font-family: "JetBrains Mono";
+                font-size: 10.5px;
+                color: var(--faint);
+            }
+            .h-arrow {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 7px;
+                flex: 0 0 auto;
+            }
+            .h-arrow svg {
+                width: 44px;
+                height: 16px;
+                stroke: var(--faint);
+                fill: none;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+            .h-flow {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .dg-wrap {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex: 1;
+                min-height: 0;
+                margin-top: 10px;
+            }
+            .c-node {
+                font-family: "JetBrains Mono", monospace;
+                background: #101830;
+                border: 1px solid rgba(148, 163, 198, 0.25);
+                border-radius: 9px;
+                padding: 7px 15px;
+                font-size: calc(var(--fs-code) * 0.82);
+                direction: ltr;
+                white-space: nowrap;
+            }
+            .c-node.k {
+                color: #ff8a80;
+                border-color: rgba(255, 138, 128, 0.4);
+                font-weight: 600;
+            }
+            .c-node.v {
+                color: var(--violet);
+                border-color: rgba(183, 156, 246, 0.4);
+            }
+            .c-node.u {
+                color: var(--gold);
+                border-color: rgba(230, 192, 122, 0.4);
+            }
+            .c-node.t {
+                color: #9cc3ff;
+                border-color: rgba(91, 155, 255, 0.4);
+            }
+            .c-node.st {
+                color: #f5b98c;
+                border-color: rgba(240, 151, 92, 0.45);
+            }
+            .vline {
+                width: 2px;
+                height: 16px;
+                background: rgba(148, 163, 198, 0.35);
+                flex: 0 0 auto;
+            }
+
+            .ft {
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+                width: min(540px, 100%);
+            }
+            .ft.compact {
+                width: 100%;
+            }
+            .ft-head {
+                font-family: "Cairo";
+                font-weight: 800;
+                font-size: 12px;
+                letter-spacing: 0.04em;
+                color: var(--faint);
+                padding: 9px 16px;
+                border-bottom: 1px solid var(--line);
+                background: rgba(148, 163, 198, 0.05);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .ft-head::after {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: var(--line);
+            }
+            .ft-body {
+                padding: 13px 20px;
+                font-family: "JetBrains Mono", monospace;
+                font-size: calc(var(--fs-code) * 0.9);
+                direction: ltr;
+                text-align: left;
+                overflow: auto;
+                flex: 1;
+                min-height: 0;
+            }
+            .ft.compact .ft-body {
+                padding: 10px 16px;
+                font-size: calc(var(--fs-code) * 0.8);
+            }
+            .ft-row {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 4.5px 0;
+                white-space: pre;
+            }
+            .ft-row.space {
+                padding: 1px 0;
+            }
+            .ft-glyph {
+                color: #39466a;
+            }
+            .ft-ic {
+                width: 15px;
+                height: 15px;
+                fill: none;
+                stroke-width: 1.7;
+                stroke-linejoin: round;
+                flex: 0 0 auto;
+            }
+            .ft-row.root {
+                color: var(--accent);
+            }
+            .ft-row.root .ft-ic {
+                stroke: var(--accent);
+            }
+            .ft-row.folder {
+                color: var(--gold);
+            }
+            .ft-row.folder .ft-ic {
+                stroke: var(--gold);
+            }
+            .ft-row.file {
+                color: #cbd5e8;
+            }
+            .ft-row.file .ft-ic {
+                stroke: var(--accent);
+            }
+
+            .urlseg {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .useg {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+            .ubox {
+                font-family: "JetBrains Mono", monospace;
+                font-size: calc(var(--fs-code) * 1.02);
+                padding: 10px 22px;
+                border-radius: 12px;
+                border: 1px solid;
+                direction: ltr;
+            }
+            .ubox.u1 {
+                color: #9cc3ff;
+                border-color: rgba(91, 155, 255, 0.45);
+                background: rgba(91, 155, 255, 0.07);
+            }
+            .ubox.u2 {
+                color: var(--gold);
+                border-color: rgba(230, 192, 122, 0.45);
+                background: rgba(230, 192, 122, 0.06);
+            }
+            .ubox.u3 {
+                color: var(--violet);
+                border-color: rgba(183, 156, 246, 0.45);
+                background: var(--violet-dim);
+            }
+            .ulabel {
+                font-family: "Cairo";
+                font-size: calc(var(--fs-small) * 0.88);
+                color: var(--muted);
+                font-weight: 700;
+            }
+            .uslash {
+                font-family: "JetBrains Mono";
+                font-size: calc(var(--fs-sub) * 0.9);
+                color: var(--faint);
+                padding-bottom: 26px;
+            }
+            .pattern {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                font-family: "JetBrains Mono", "Cairo", monospace;
+                font-size: calc(var(--fs-code) * 0.92);
+                background: #0a0f1c;
+                border: 1px solid rgba(148, 163, 198, 0.3);
+                border-radius: 9px;
+                padding: 10px 18px;
+                direction: ltr;
+                margin-top: 8px;
+            }
+            .pattern .arseg {
+                font-family: "Cairo";
+                color: var(--muted);
+                unicode-bidi: isolate;
+            }
+            .pattern .ps {
+                color: var(--faint);
+            }
+
+            .dtable {
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                overflow: hidden;
+                width: 100%;
+            }
+            .dr {
+                display: grid;
+                grid-template-columns: minmax(0, 0.55fr) minmax(0, 0.45fr);
+                border-bottom: 1px solid var(--line);
+            }
+            .dr:last-child {
+                border-bottom: none;
+            }
+            .dr > div {
+                padding: 9px 18px;
+                font-size: calc(var(--fs-small) * 0.98);
+                display: flex;
+                align-items: center;
+            }
+            .dr > div:first-child {
+                font-family: "JetBrains Mono", monospace;
+                color: #9cc3ff;
+                direction: ltr;
+                justify-content: flex-start;
+            }
+            .dr > div:last-child {
+                font-family: "Cairo";
+                direction: rtl;
+                color: #cbd5e8;
+                justify-content: flex-end;
+                text-align: right;
+            }
+            .dr:nth-child(odd) {
+                background: rgba(148, 163, 198, 0.03);
+            }
+            .dh {
+                background: rgba(148, 163, 198, 0.08) !important;
+            }
+            .dh > div {
+                font-family: "Cairo" !important;
+                font-weight: 800 !important;
+                color: var(--muted) !important;
+            }
+
+            .mm-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 9px;
+            }
+            .mm-row {
+                display: grid;
+                grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+                gap: 12px;
+                align-items: center;
+                padding: 9px 15px;
+                border: 1px solid var(--line);
+                border-radius: 10px;
+                background: rgba(148, 163, 198, 0.05);
+            }
+            .mm-row .sig {
+                font-family: "JetBrains Mono", monospace;
+                color: #9cc3ff;
+                font-size: calc(var(--fs-code) * 0.85);
+                direction: ltr;
+                text-align: left;
+                white-space: pre-wrap;
+            }
+            .mm-row .trg {
+                font-family: "Cairo";
+                direction: rtl;
+                font-size: var(--fs-small);
+                color: var(--muted);
+                text-align: right;
+                line-height: 1.7;
+            }
+
+            .title-slide .s-body {
+                justify-content: center;
+            }
+            .t-wrap {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                margin: auto;
+                direction: rtl;
+            }
+            .t-brand {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                font-family: "Poppins", "Cairo";
+                letter-spacing: 0.3em;
+                font-size: var(--fs-nav);
+                color: var(--muted);
+                font-weight: 600;
+                direction: ltr;
+            }
+            .t-brand b {
+                color: var(--accent);
+            }
+            .t-brand .logo {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+            }
+            .t-brand .logo svg {
+                width: 20px;
+                height: 20px;
+            }
+            .t-over {
+                margin-top: 24px;
+                font-family: "JetBrains Mono";
+                letter-spacing: 0.28em;
+                font-size: calc(var(--fs-nav) * 0.9);
+                color: var(--accent);
+                border: 1px solid rgba(91, 155, 255, 0.3);
+                background: var(--accent-dim);
+                padding: 6px 18px;
+                border-radius: 999px;
+                direction: ltr;
+            }
+            .t-title {
+                font-family: "Cairo", "Poppins";
+                font-size: var(--fs-hero);
+                font-weight: 800;
+                letter-spacing: -0.01em;
+                margin-top: 22px;
+                line-height: 1.2;
+            }
+            .t-title span {
+                color: var(--accent);
+            }
+            .t-sub {
+                margin-top: 14px;
+                font-size: calc(var(--fs-body) * 1);
+                color: var(--muted);
+                font-weight: 600;
+            }
+            .t-flow {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                margin-top: 38px;
+                flex-wrap: wrap;
+                justify-content: center;
+                direction: ltr;
+            }
+            .toc-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px 12px;
+                align-content: center;
+                flex: 1;
+                min-height: 0;
+            }
+            .toc-item {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                padding: 7px 13px;
+                background: rgba(148, 163, 198, 0.05);
+                border: 1px solid var(--line);
+                border-radius: 9px;
+                cursor: pointer;
+                transition: 0.2s;
+                min-width: 0;
+                direction: rtl;
+            }
+            .toc-item:hover {
+                border-color: rgba(91, 155, 255, 0.45);
+                background: var(--accent-dim);
+                transform: translateY(-1px);
+            }
+            .t-num {
+                font-family: "JetBrains Mono", monospace;
+                color: var(--accent);
+                font-size: calc(var(--fs-small) * 0.82);
+                flex: 0 0 auto;
+            }
+            .toc-item .tt {
+                font-family: "Cairo";
+                font-weight: 700;
+                font-size: calc(var(--fs-small) * 0.9);
+                color: #cbd5e8;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                direction: rtl;
+                text-align: right;
+                flex: 1;
+                min-width: 0;
+            }
+            .signoff {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                justify-content: center;
+                margin-top: auto;
+                padding-top: 16px;
+                color: var(--faint);
+                font-family: "Poppins", "Cairo";
+                letter-spacing: 0.24em;
+                font-size: calc(var(--fs-nav) * 0.9);
+                direction: ltr;
+            }
+            .signoff .logo {
+                width: 26px;
+                height: 26px;
+            }
+            .signoff .logo svg {
+                width: 15px;
+                height: 15px;
+            }
+
+            @media (max-height: 820px) {
+                .slide {
+                    padding: 18px 76px 12px;
+                }
+                .card {
+                    padding: 12px 16px;
+                }
+                .s-title {
+                    font-size: calc(31px * var(--scale));
+                }
+                .arcard {
+                    padding: 10px 14px;
+                }
+                #topbar {
+                    height: 52px;
+                    flex-basis: 52px;
+                }
+                #botbar {
+                    height: 38px;
+                    flex-basis: 38px;
+                }
+                p.ar {
+                    line-height: 1.8;
+                }
+                .vline {
+                    height: 13px;
+                }
+                .errslot .term-body {
+                    max-height: 138px;
+                }
+            }
+            @media (max-width: 1200px) {
+                .slide {
+                    padding-left: 72px;
+                    padding-right: 72px;
+                }
+                .cols {
+                    gap: 18px;
+                }
+            }
+            @media (max-width: 1100px) {
+                .toc-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+            @media (max-width: 960px) {
+                .cols {
+                    grid-template-columns: 1fr;
+                }
+                .slide {
+                    padding: 16px 18px;
+                }
+                .duo,
+                .trio,
+                .toc-grid,
+                .mm-grid {
+                    grid-template-columns: 1fr;
+                }
+                .f-hint,
+                .sect-chip,
+                .brand-sub {
+                    display: none;
+                }
+                .navbtn {
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                * {
+                    transition: none !important;
+                    animation: none !important;
+                }
+                .s-body > *,
+                .col > *,
+                .duo > *,
+                .s-head {
+                    opacity: 1 !important;
+                    transform: none !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="prog"></div>
+        <div id="app">
+            <header id="topbar">
+                <div class="brand">
+                    <span class="logo" id="logo1"></span>
+                    <span class="brand-name">
+                        INFINITY
+                        <b>CODE</b>
+                    </span>
+                    <span class="brand-sub">PHP FUNDAMENTALS</span>
+                </div>
+                <div class="tb-right">
+                    <span class="sect-chip" id="sectChip"></span>
+                    <div class="counter" id="counter">— / —</div>
+                    <button class="ibtn" id="btnMinus" title="تصغير الخط (−)">
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14" /></svg>
+                    </button>
+                    <button class="ibtn" id="btnPlus" title="تكبير الخط (+)">
+                        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+                    </button>
+                    <button class="ibtn" id="btnFs" title="شاشة كاملة (F)">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+            <main id="stage"></main>
+            <footer id="botbar">
+                <span class="f-left">
+                    <b>Infinity Code</b>
+                    • PHP Fundamentals
+                </span>
+                <span class="f-hint">
+                    التنقل: ← → أو Space · + / − لتغيير حجم الخط · 0 للرجوع · F للشاشة الكاملة · Esc
+                    للخروج
+                </span>
+                <span class="f-right" id="footSect"></span>
+            </footer>
+        </div>
+        <button class="navbtn prev" id="btnPrev" title="السابق" aria-label="السابق">
+            <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></svg>
+        </button>
+        <button class="navbtn next" id="btnNext" title="التالي" aria-label="التالي">
+            <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
+        </button>
+        <div id="toast"></div>
+
+        <script>
+            const C = {}
+            C.tag = `<?php
+
+// PHP Code
+
+?>`
+            C.s8 = `<?php
+echo ("hello");
+?>`
+            C.s13w = `<?php
+
+echo(hello !);`
+            C.s14w = `<?php
+
+echo("hello !")
+echo("hello !");`
+            C.s14ok = `<?php
+
+echo("hello !");
+echo("hello !");`
+            C.s15 = `<?php
+
+echo ("hello ");
+echo ("Mohamed");`
+            C.s16 = `<?php
+echo("hello <br>");
+echo("Mohamed");`
+            C.s17 = `<?php
+echo("Hello <br>");
+?>
+
+<?php
+echo("Mohamed");
+?>`
+            C.s18 = `<?php
+
+// Check the user before continuing
+echo("Hello");`
+            C.s19 = `<?php
+
+/*
+This is a comment
+written on multiple lines
+and PHP will ignore it.
+*/
+
+echo("Hello");`
+            C.s20a = `<?php
+
+echo("Hello"); // This is a comment
+echo("Mohamed");`
+            C.s20b = `<?php
+echo("Hello"); /* This is a comment */ echo("Mohamed");`
+            C.s23 = `<?php
+
+echo("Hello");
+echo("<br>");
+
+echo(gettype("Hello"));`
+            C.s24 = `<?php
+
+echo(25);
+echo("<br>");
+
+echo(gettype(25));`
+            C.s25 = `<?php
+
+echo(25.5);
+echo("<br>");
+
+echo(gettype(25.5));`
+            C.s26 = `<?php
+
+echo(true);
+echo("<br>");
+
+echo(gettype(true));`
+
+            const E13 = String.raw`Parse error: syntax error, unexpected token "!" in C:\xampp\htdocs\learn-php\test.php on line 3`
+            const E14 = String.raw`Parse error: syntax error, unexpected token "echo", expecting "," or ";" in C:\xampp\htdocs\learn-php\test.php on line 4`
+
+            const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+            const com = (s) => '<span class="tk-com">' + s + "</span>"
+            let TOK
+            try {
+                TOK = new RegExp(
+                    "(&lt;\\?php|&lt;\\?=|\\?&gt;)|('(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\")|(\\$[A-Za-z_]\\w*)|\\b(class|public|private|function|new|return|if|else|echo|true|false|null|array)\\b|(?<!\\w)([A-Za-z_]\\w*)(?=\\s*\\()|\\b(\\d+(?:\\.\\d+)?)\\b",
+                    "g"
+                )
+            } catch (e) {
+                TOK = new RegExp(
+                    "(&lt;\\?php|&lt;\\?=|\\?&gt;)|('(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\")|(\\$[A-Za-z_]\\w*)|\\b(class|public|private|function|new|return|if|else|echo|true|false|null|array)\\b|([A-Za-z_]\\w*)(?=\\s*\\()|\\b(\\d+(?:\\.\\d+)?)\\b",
+                    "g"
+                )
+            }
+            function hlInline(s) {
+                return s.replace(TOK, (m, tag, str, vr, kw, fn, num) => {
+                    const cls =
+                        tag ? "tk-tag"
+                        : str ? "tk-str"
+                        : vr ? "tk-var"
+                        : kw ? "tk-kw"
+                        : fn ? "tk-fn"
+                        : num ? "tk-num"
+                        : ""
+                    return cls ? '<span class="' + cls + '">' + m + "</span>" : m
+                })
+            }
+            function findC(s) {
+                let q = null
+                for (let i = 0; i < s.length; i++) {
+                    const ch = s[i]
+                    if (q) {
+                        if (ch === "\\") {
+                            i++
+                            continue
+                        }
+                        if (ch === q) q = null
+                    } else if (ch === "'" || ch === '"') q = ch
+                    else if (ch === "/" && s[i + 1] === "/") return { t: "line", s: i }
+                    else if (ch === "/" && s[i + 1] === "*") {
+                        const e = s.indexOf("*/", i + 2)
+                        return e > -1 ? { t: "block", s: i, e: e + 2 } : { t: "open", s: i }
+                    }
+                }
+                return null
+            }
+            function renderLines(code, hl, redHl) {
+                const hset = new Set(hl || []),
+                    rset = new Set(redHl || [])
+                let inBlock = false
+                return code
+                    .split("\n")
+                    .map((ln, i) => {
+                        let inner
+                        if (inBlock) {
+                            const e = ln.indexOf("*/")
+                            if (e === -1) inner = com(esc(ln))
+                            else {
+                                inner =
+                                    com(esc(ln.slice(0, e + 2))) + hlInline(esc(ln.slice(e + 2)))
+                                inBlock = false
+                            }
+                        } else {
+                            const t = ln.trimStart()
+                            if (t.startsWith("//")) inner = com(esc(ln))
+                            else {
+                                const s = esc(ln)
+                                const c = findC(s)
+                                if (!c) inner = hlInline(s)
+                                else if (c.t === "line")
+                                    inner = hlInline(s.slice(0, c.s)) + com(s.slice(c.s))
+                                else if (c.t === "block")
+                                    inner =
+                                        hlInline(s.slice(0, c.s)) +
+                                        com(s.slice(c.s, c.e)) +
+                                        hlInline(s.slice(c.e))
+                                else {
+                                    inner = hlInline(s.slice(0, c.s)) + com(s.slice(c.s))
+                                    inBlock = true
+                                }
+                            }
+                        }
+                        const cls =
+                            "cl" +
+                            (hset.has(i + 1) ? " hl" : "") +
+                            (rset.has(i + 1) ? " hl-red" : "")
+                        return '<div class="' + cls + '">' + (inner || "&#8203;") + "</div>"
+                    })
+                    .join("")
+            }
+            function codebox(name, code, opts = {}) {
+                const raw = code.replace(/^\n+/, "").replace(/\n+$/, "")
+                const copyIcon =
+                    '<svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>'
+                return (
+                    '<div class="codebox"><div class="cb-bar">' +
+                    '<span class="cb-dots"><span class="dot" style="background:#e5645c"></span><span class="dot" style="background:#e0b152"></span><span class="dot" style="background:#69bd5c"></span></span>' +
+                    '<span class="cb-tab">' +
+                    name +
+                    '<span class="cb-close">×</span></span>' +
+                    '<span class="cb-lang">PHP</span>' +
+                    '<button class="cb-copy" title="نسخ الكود">' +
+                    copyIcon +
+                    "</button>" +
+                    "</div>" +
+                    '<div class="code-scroll"><pre><code style="counter-reset:ln 0">' +
+                    renderLines(raw, opts.hl, opts.redHl) +
+                    "</code></pre></div></div>"
+                )
+            }
+
+            function barDots() {
+                return '<span class="dot" style="background:#e5645c"></span><span class="dot" style="background:#e0b152"></span><span class="dot" style="background:#69bd5c"></span>'
+            }
+            function errPanel(raw, extra) {
+                let h = esc(raw)
+                h = h.replace(/Parse error:/g, '<span class="t-red">Parse error:</span>')
+                ;(extra || []).forEach((r) => {
+                    h = h.split(r[0]).join('<span class="t-gold">' + r[0] + "</span>")
+                })
+                h = h.replace(/C:\\[^ ]*?\.php/g, (m) => '<span class="t-path">' + m + "</span>")
+                return (
+                    '<div class="term"><div class="term-bar">' +
+                    barDots() +
+                    '<span class="term-title">رسالة الخطأ</span><span class="term-badge">PARSE ERROR</span></div>' +
+                    '<div class="term-body">' +
+                    h +
+                    "</div></div>"
+                )
+            }
+            function browserOut(lines, url) {
+                return (
+                    '<div class="browser"><div class="br-bar">' +
+                    barDots() +
+                    '<span class="br-url">' +
+                    (url || "localhost/learn-php/test.php") +
+                    "</span></div>" +
+                    '<div class="br-body">' +
+                    lines.map((l) => '<div class="br-line">' + esc(l) + "</div>").join("") +
+                    "</div></div>"
+                )
+            }
+
+            const pad = (n) => String(n).padStart(2, "0")
+            const LOGO =
+                '<svg viewBox="0 0 24 24"><path d="M18.6 6.62c-1.44 0-2.8.56-3.77 1.53L12 10.66 10.48 12h.01L7.8 14.39c-.64.64-1.49.99-2.4.99-1.87 0-3.39-1.51-3.39-3.38s1.52-3.38 3.39-3.38c.91 0 1.76.35 2.44 1.03l1.13 1 1.51-1.34-1.26-1.12c-.99-.98-2.39-1.57-3.82-1.57-2.12 0-3.84 1.72-3.84 3.84s1.72 3.84 3.84 3.84c1.44 0 2.8-.56 3.77-1.53l2.83-2.5.01.01 1.42-1.27c.64-.64 1.49-.99 2.4-.99 1.87 0 3.39 1.51 3.39 3.38s-1.52 3.38-3.39 3.38c-.9 0-1.76-.35-2.44-1.03l-1.14-1.01-1.51 1.34 1.27 1.13c.99.98 2.39 1.57 3.82 1.57 2.12 0 3.84-1.72 3.84-3.84s-1.72-3.85-3.84-3.85z"/></svg>'
+            const SVG_V = '<svg viewBox="0 0 16 30"><path d="M8 3v22M3 20l5 6 5-6"/></svg>'
+            const SVG_H = '<svg viewBox="0 0 56 16"><path d="M3 8h44M41 3l7 5-7 5"/></svg>'
+            const ICO_FOLDER =
+                '<svg class="ft-ic" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>'
+            const ICO_FILE =
+                '<svg class="ft-ic" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6V3Z"/><path d="M14 3v4h4"/></svg>'
+
+            const SECT = {
+                A: "المقدمة",
+                B: "البداية مع PHP",
+                C: "أساسيات الـ Syntax",
+                D: "الـ Comments",
+                E: "الـ Data Types"
+            }
+
+            function S(o, body) {
+                const chips = ['<span class="k-num">' + pad(o.n) + "</span>"]
+                if (o.part) chips.push('<span class="k-tag">' + SECT[o.part] + "</span>")
+                if (o.status === "bad") chips.push('<span class="k-status bad">❌ الخطأ</span>')
+                if (o.status === "good") chips.push('<span class="k-status good">✅ الصح</span>')
+                chips.push('<span class="k-line"></span>')
+                const attrs =
+                    (o.toc ? ' data-toc="' + o.toc + '"' : "") +
+                    (o.part ? ' data-part="' + o.part + '"' : "")
+                return (
+                    '<div class="slide"' +
+                    attrs +
+                    '><div class="s-head"><div class="kicker">' +
+                    chips.join("") +
+                    "</div>" +
+                    '<h2 class="s-title">' +
+                    o.title +
+                    '</h2></div><div class="s-body">' +
+                    body +
+                    "</div></div>"
+                )
+            }
+            function headPlain(title) {
+                return (
+                    '<div class="s-head"><div class="kicker"><span class="k-num">مراجعة</span><span class="k-line"></span></div>' +
+                    '<h2 class="s-title">' +
+                    title +
+                    "</h2></div>"
+                )
+            }
+            const shc = (...ps) =>
+                '<div class="arcard" dir="rtl"><div class="tag">شرح</div>' +
+                ps.map((p) => '<p class="ar">' + p + "</p>").join("") +
+                "</div>"
+            const card = (tag, cls, ...ps) =>
+                '<div class="' +
+                (cls || "note-key") +
+                '" dir="rtl">' +
+                (tag ?
+                    '<div class="tag" style="font-family:Cairo;font-weight:800;color:' +
+                    (cls && cls.indexOf("gold") > -1 ? "var(--gold)"
+                    : cls && cls.indexOf("viol") > -1 ? "var(--violet)"
+                    : "var(--accent)") +
+                    ';margin-bottom:3px;font-size:calc(var(--fs-nav)*.95)">' +
+                    tag +
+                    "</div>"
+                :   "") +
+                ps.map((p) => '<p class="ar">' + p + "</p>").join("") +
+                "</div>"
+            const khulasa = (...ps) => card("💡 الخلاصة", "note-key", ...ps)
+            const molahaza = (...ps) => card("ملاحظة", "note-key gold", ...ps)
+            const muhem = (...ps) => card("مهم", "note-key gold", ...ps)
+            const leh = (...ps) => card("ليه؟", "note-key", ...ps)
+            function vflow(items) {
+                let h = ""
+                items.forEach((it, i) => {
+                    if (i)
+                        h +=
+                            '<div class="farr">' +
+                            (it[2] ? '<span class="flabel">' + it[2] + "</span>" : "") +
+                            SVG_V +
+                            "</div>"
+                    h +=
+                        '<div class="node ' +
+                        (it[3] || "") +
+                        '"><span class="n-main' +
+                        (it[4] === "m" ? " mono" : "") +
+                        '">' +
+                        it[0] +
+                        "</span>" +
+                        (it[1] ? '<span class="n-tag">' + it[1] + "</span>" : "") +
+                        "</div>"
+                })
+                return (
+                    '<div class="flow" style="display:flex;flex-direction:column;align-items:center">' +
+                    h +
+                    "</div>"
+                )
+            }
+            function ftR(g, t, n) {
+                if (t === "space")
+                    return '<div class="ft-row space"><span class="ft-glyph">' + g + "</span></div>"
+                const ic = t === "folder" ? ICO_FOLDER : ICO_FILE
+                return (
+                    '<div class="ft-row ' +
+                    t +
+                    '"><span class="ft-glyph">' +
+                    g +
+                    "</span>" +
+                    ic +
+                    "<span>" +
+                    n +
+                    "</span></div>"
+                )
+            }
+            function fileTree(rows, title, compact) {
+                return (
+                    '<div class="ft' +
+                    (compact ? " compact" : "") +
+                    '"><div class="ft-head">' +
+                    (title || "هيكل المشروع") +
+                    '</div><div class="ft-body">' +
+                    rows.map((r) => ftR(r[0], r[1], r[2])).join("") +
+                    "</div></div>"
+                )
+            }
+
+            const titleSlide =
+                '<div class="slide title-slide"><div class="s-body"><div class="t-wrap">' +
+                '<div class="t-brand"><span class="logo">' +
+                LOGO +
+                "</span><span>INFINITY <b>CODE</b></span></div>" +
+                '<span class="t-over">PHP FUNDAMENTALS</span>' +
+                '<h1 class="t-title">أساسيات <span>PHP</span> — من الصفر خطوة بخطوة</h1>' +
+                '<p class="t-sub">تعالى نفهمها واحدة واحدة… من يعني إيه Programming لحد الـ Data Types</p>' +
+                '<div class="t-flow">' +
+                '<div class="node n-class"><span class="n-main mono">Programming</span><span class="n-tag">تعليمات للكمبيوتر</span></div>' +
+                '<div class="h-arrow">' +
+                SVG_H +
+                "</div>" +
+                '<div class="node n-self"><span class="n-main mono">PHP</span><span class="n-tag">Server-Side Language</span></div>' +
+                '<div class="h-arrow">' +
+                SVG_H +
+                "</div>" +
+                '<div class="node n-obj"><span class="n-main mono">echo</span><span class="n-tag">عرض الـ Data</span></div>' +
+                '<div class="h-arrow">' +
+                SVG_H +
+                "</div>" +
+                '<div class="node"><span class="n-main mono">Data Types</span><span class="n-tag">String · Integer · Float · Boolean</span></div>' +
+                "</div></div></div></div>"
+
+            const builders = [
+                () =>
+                    S(
+                        { n: 1, part: "A", toc: 1, title: "يعني إيه Programming ؟" },
+                        shc(
+                            'الـ <code class="ic">Programming</code> يعني إننا بندي الكمبيوتر مجموعة من <b>التعليمات</b> علشان ينفذ Task أو مهمة معينة إحنا عايزينها.'
+                        ) +
+                            '<div class="dg-wrap" style="margin-top:16px">' +
+                            '<div class="h-flow">' +
+                            '<div class="node n-class" style="padding:14px 22px 16px"><span class="n-main" style="font-size:calc(var(--fs-body)*.95)">الشاشة + الكيبورد + الماوس</span><span class="n-tag">Monitor · Keyboard · Mouse</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node" style="padding:14px 22px 16px"><span class="n-main" style="font-size:calc(var(--fs-body)*.95)">فحص عدم الاستخدام</span><span class="n-tag">Check Inactivity</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node" style="padding:14px 22px 16px"><span class="n-main" style="font-size:calc(var(--fs-body)*.95)">30 دقيقة</span><span class="n-tag">30 Minutes</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node n-lock" style="padding:14px 22px 16px"><span class="n-main" style="font-size:calc(var(--fs-body)*.95)">قفل الكمبيوتر</span><span class="n-tag">Lock Computer</span></div>' +
+                            "</div></div>" +
+                            molahaza(
+                                'تخيل برنامج بيقفل الكمبيوتر بعد مرور <b>30 دقيقة</b> لو مفيش أي استخدام للـ <code class="ic">Keyboard</code> أو الـ <code class="ic">Mouse</code> — دي بالظبط فكرة الـ Programming: تعليمات واضحة للكمبيوتر ينفذها.'
+                            ) +
+                            khulasa(
+                                "البرمجة = إعطاء الكمبيوتر تعليمات واضحة علشان ينفذ مهمة معينة."
+                            )
+                    ),
+                () =>
+                    S(
+                        { n: 2, part: "A", toc: 2, title: "إزاي بنتواصل مع الكمبيوتر؟" },
+                        '<div class="duo">' +
+                            '<div class="card"><div class="kc-label">إحنا البشر بنتواصل بلغات</div>' +
+                            '<div class="chips" style="margin-top:0"><span class="chip ar">Arabic — العربي</span><span class="chip ar">English — الإنجليزي</span></div></div>' +
+                            '<div class="card"><div class="kc-label v">الكمبيوتر محتاج لغة تانية</div>' +
+                            '<p class="ar" style="font-size:var(--fs-small)">الكمبيوتر محتاج <code class="ic">Programming Languages</code> علشان نقدر نديه Instructions ويفهمها.</p></div>' +
+                            "</div>" +
+                            '<div class="card" style="margin-top:16px"><div class="kc-label">كل Programming Language عندها</div>' +
+                            '<div class="trio">' +
+                            '<div class="node" style="padding:9px 14px 11px"><span class="n-main">كلمات معينة</span></div>' +
+                            '<div class="node" style="padding:9px 14px 11px"><span class="n-main">قواعد</span></div>' +
+                            '<div class="node" style="padding:9px 14px 11px"><span class="n-main mono">Syntax</span></div>' +
+                            "</div></div>" +
+                            '<div class="card" style="margin-top:16px"><div class="kc-label g">أمثلة على Programming Languages</div>' +
+                            '<div class="chips" style="margin-top:0"><span class="chip blue">PHP</span><span class="chip">JavaScript</span><span class="chip">Python</span><span class="chip">C++</span><span class="chip">Java</span></div></div>'
+                    ),
+
+                () =>
+                    S(
+                        { n: 3, part: "A", toc: 3, title: "هتبقى إيه بعد ما تتعلم البرمجة؟" },
+                        '<div class="card"><div class="kc-label">المسميات اللي ممكن تسمعها</div>' +
+                            '<div class="duo" style="gap:12px">' +
+                            '<div class="node" style="padding:10px 14px 12px"><span class="n-main mono">Programmer</span></div>' +
+                            '<div class="node" style="padding:10px 14px 12px"><span class="n-main mono">Coder</span></div>' +
+                            '<div class="node" style="padding:10px 14px 12px"><span class="n-main mono">Developer</span></div>' +
+                            '<div class="node" style="padding:10px 14px 12px"><span class="n-main mono">Software Engineer</span></div>' +
+                            "</div></div>" +
+                            '<div class="arcard" dir="rtl" style="margin-top:16px"><div class="tag">الهدف من الكورس</div>' +
+                            '<p class="ar">الهدف مش مجرد إنك تكتب <code class="ic">Code</code> — الهدف إنك تتعلم إنك:</p></div>' +
+                            '<div class="duo" style="margin-top:14px">' +
+                            card(
+                                "",
+                                "note-key",
+                                'تفهم الـ <code class="ic">Software</code> إزاي بيشتغل.'
+                            ) +
+                            card(
+                                "",
+                                "note-key",
+                                'تحل <code class="ic">Problems</code> بطريقة منطقية.'
+                            ) +
+                            card("", "note-key", 'تبني <code class="ic">Software</code> بإيدك.') +
+                            card(
+                                "",
+                                "note-key",
+                                'تفكر بطريقة <code class="ic">Software Engineer</code>.'
+                            ) +
+                            "</div>"
+                    ),
+
+                () =>
+                    S(
+                        { n: 4, part: "A", toc: 4, title: "إيه المطلوب منك في الكورس؟" },
+                        shc("رحلة التعلم في الكورس بتدور في دايرة واحدة — وكل مرة بترجع أقوى:") +
+                            '<div class="dg-wrap">' +
+                            '<div class="h-flow">' +
+                            '<div class="node n-class" style="padding:14px 26px 16px"><span class="n-main" style="font-size:var(--fs-body)">افهم</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node" style="padding:14px 26px 16px"><span class="n-main" style="font-size:var(--fs-body)">طبّق</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node n-lock" style="padding:14px 26px 16px"><span class="n-main" style="font-size:var(--fs-body)">اغلط</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node" style="padding:14px 26px 16px"><span class="n-main" style="font-size:var(--fs-body)">صحّح</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node n-self" style="padding:14px 26px 16px"><span class="n-main" style="font-size:var(--fs-body)">كرر</span></div>' +
+                            "</div></div>" +
+                            muhem(
+                                "الغلط جزء طبيعي من تعلم البرمجة — كل الأخطاء اللي هتعملها هي اللي هتعلّمك فعليًا. متخافش من الـ Error، افهمه وصحّحه وكمّل."
+                            )
+                    ),
+
+                () =>
+                    S(
+                        { n: 5, part: "A", toc: 5, title: "إزاي الكمبيوتر بيفهم الكود؟" },
+                        shc(
+                            "الكمبيوتر مش بيفهم الـ Code اللي بنكتبه مباشرة — في حاجة بتترجمه للغة اللي بيفهمها."
+                        ) +
+                            '<div class="dg-wrap">' +
+                            '<div class="h-flow">' +
+                            '<div class="node n-class" style="padding:14px 22px 16px"><span class="n-main mono" style="font-size:calc(var(--fs-body)*.95)">Source Code</span><span class="n-tag">الكود اللي بنكتبه</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node" style="padding:14px 22px 16px"><span class="n-main" style="font-size:calc(var(--fs-body)*.95)">Compiler / Interpreter</span><span class="n-tag">المترجم</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node n-abs" style="padding:14px 22px 16px"><span class="n-main mono" style="font-size:calc(var(--fs-body)*.95)">Machine Code</span><span class="n-tag">لغة الكمبيوتر</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node n-obj" style="padding:14px 22px 16px"><span class="n-main" style="font-size:calc(var(--fs-body)*.95)">Computer</span><span class="n-tag">ينفذ التعليمات</span></div>' +
+                            "</div>" +
+                            "</div>" +
+                            card(
+                                "تشبيه بسيط",
+                                "note-key viol",
+                                'زي الـ <code class="ic">Translator</code> بالظبط — إحنا بنكتب بلغة نفهمها إحنا، والمترجم بيحوّلها للغة الكمبيوتر علشان ينفذها.'
+                            ) +
+                            molahaza(
+                                "مش كل لغات البرمجة بتشتغل بنفس الطريقة دي — كل لغة ليها طريقتها الخاصة في الترجمة والتنفيذ."
+                            )
+                    ),
+                () =>
+                    S(
+                        { n: 6, part: "A", toc: 6, title: "إيه هو Code Editor؟" },
+                        shc(
+                            'الـ <code class="ic">Code Editor</code> هو المكان أو البيئة اللي المبرمج بيكتب وبيشتغل فيها على الـ <code class="ic">Source Code</code>.'
+                        ) +
+                            '<div class="card" style="margin-top:14px"><div class="kc-label">أمثلة على Code Editors</div>' +
+                            '<div class="trio">' +
+                            '<div class="node n-class" style="padding:12px 14px 14px"><span class="n-main mono">Visual Studio Code</span><span class="n-tag" style="color:var(--accent)">الكورس هيستخدمه ✓</span></div>' +
+                            '<div class="node" style="padding:12px 14px 14px"><span class="n-main mono">Sublime Text</span></div>' +
+                            '<div class="node" style="padding:12px 14px 14px"><span class="n-main mono">Notepad++</span></div>' +
+                            "</div></div>" +
+                            khulasa(
+                                'هنستخدم <code class="ic">Visual Studio Code</code> طول الكورس — هو المكان اللي هنكتب فيه كل أكوادنا.'
+                            )
+                    ),
+
+                () =>
+                    S(
+                        { n: 7, part: "B", toc: 7, title: 'الـ <span class="m">PHP Tag</span>' },
+                        '<div class="cols"><div class="col">' +
+                            codebox("test.php", C.tag, { hl: [1, 5] }) +
+                            "</div>" +
+                            '<div class="col">' +
+                            shc(
+                                'الـ <code class="ic">&lt;?php</code> بتبدأ الـ PHP Code.',
+                                'الـ <code class="ic">?&gt;</code> بتنهي الـ PHP Code.',
+                                "كل الكود اللي بينهم هو اللي الـ PHP هتتعامل معاه."
+                            ) +
+                            muhem(
+                                'لو الملف كله PHP — غالبًا <b>مش بنحتاج</b> نكتب الـ Closing Tag <code class="ic">?&gt;</code> في الآخر.'
+                            ) +
+                            khulasa(
+                                '<code class="ic">&lt;?php</code> → البداية &nbsp;·&nbsp; <code class="ic">?&gt;</code> → النهاية'
+                            ) +
+                            "</div></div>"
+                    ),
+
+                () =>
+                    S(
+                        {
+                            n: 8,
+                            part: "B",
+                            toc: 8,
+                            title: 'ليه كود <span class="m">PHP</span> مش بيتنفذ؟'
+                        },
+                        '<div class="cols"><div class="col">' +
+                            codebox("test.php", C.s8) +
+                            "</div>" +
+                            '<div class="col">' +
+                            shc(
+                                "لو الـ PHP مش بتتعملها Processing، الـ Browser ممكن يعرض الكود كنص بدل ما ينفذه.",
+                                "الـ <b>Browser</b> لا ينفذ PHP مباشرة — بيتعامل بشكل أساسي مع:",
+                                '<code class="ic">HTML</code> · <code class="ic">CSS</code> · <code class="ic">JavaScript</code>',
+                                'أما الـ <b>PHP</b> فمحتاجة <code class="ic">Server-Side Environment</code> — وهنا بيجي دور الـ <code class="ic">XAMPP</code>.'
+                            ) +
+                            "</div></div>" +
+                            '<div class="card dg-card" style="margin-top:14px;min-height:110px">' +
+                            '<div class="h-flow">' +
+                            '<div class="node" style="padding:8px 16px 10px"><span class="n-main mono">Browser</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node" style="padding:8px 16px 10px"><span class="n-main mono">Local Server</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node n-class" style="padding:8px 16px 10px"><span class="n-main mono">PHP</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node n-abs" style="padding:8px 16px 10px"><span class="n-main mono">PHP Execution</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node n-obj" style="padding:8px 16px 10px"><span class="n-main mono">Browser</span></div>' +
+                            "</div></div>"
+                    ),
+
+                () =>
+                    S(
+                        {
+                            n: 9,
+                            part: "B",
+                            toc: 9,
+                            title: 'مكان ملفات <span class="m">PHP</span> في <span class="m">XAMPP</span>'
+                        },
+                        '<div class="cols" style="grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)">' +
+                            '<div class="col" style="justify-content:center">' +
+                            fileTree(
+                                [
+                                    ["", "root", "xampp/"],
+                                    ["│", "space", ""],
+                                    ["└── ", "folder", "htdocs/"],
+                                    ["    └── ", "folder", "learn-php/"],
+                                    ["        └── ", "file", "index.php"]
+                                ],
+                                "هيكل المشروع"
+                            ) +
+                            '</div><div class="col" style="justify-content:center">' +
+                            shc(
+                                'ملفات المشروع بتكون داخل الفولدر <code class="ic">xampp/htdocs</code>.',
+                                'عندنا مشروع اسمه <code class="ic">learn-php</code>، وجواه ملف اسمه <code class="ic">index.php</code>.'
+                            ) +
+                            muhem(
+                                'لازم ملفاتك تكون جوه <code class="ic">htdocs</code> علشان الـ Local Server يقدر يوصلها ويشغلها.'
+                            ) +
+                            "</div></div>"
+                    ),
+
+                () =>
+                    S(
+                        {
+                            n: 10,
+                            part: "B",
+                            toc: 10,
+                            title: 'إزاي نوصل لمشروع <span class="m">PHP</span>؟'
+                        },
+                        shc("من الـ Browser بنكتب الـ URL ده علشان نوصل لمشروعنا ونشغله:") +
+                            '<div class="dg-wrap">' +
+                            '<div class="urlseg">' +
+                            '<div class="useg"><span class="ubox u1">localhost</span><span class="ulabel">الجهاز المحلي</span></div>' +
+                            '<span class="uslash">/</span>' +
+                            '<div class="useg"><span class="ubox u2">learn-php</span><span class="ulabel">اسم Folder المشروع</span></div>' +
+                            '<span class="uslash">/</span>' +
+                            '<div class="useg"><span class="ubox u3">index.php</span><span class="ulabel">اسم الملف</span></div>' +
+                            "</div></div>" +
+                            '<div style="text-align:center;margin-top:14px"><span class="pattern">localhost<span class="ps"> / </span><span class="arseg">اسم-المجلد</span><span class="ps"> / </span><span class="arseg">اسم-الملف</span></span></div>' +
+                            khulasa("ده الـ Pattern العام للوصول لأي مشروع PHP عندك على الجهاز.")
+                    ),
+
+                () =>
+                    S(
+                        {
+                            n: 11,
+                            part: "B",
+                            toc: 11,
+                            title: 'ليه بنقدر نفتح <span class="m">index.php</span> من غير ما نكتبه؟'
+                        },
+                        '<div class="duo">' +
+                            '<div class="card"><div class="kc-label">لما نطلب الفولدر نفسه</div>' +
+                            '<span class="snip t">localhost/learn-php/</span>' +
+                            '<p class="ar" style="font-size:var(--fs-small);margin-top:10px">الـ Server ممكن يستخدم <code class="ic">Default Document</code> زي:</p>' +
+                            '<div class="chips" style="margin-top:4px"><span class="chip viol">index.php</span><span class="chip viol">index.html</span></div></div>' +
+                            '<div class="card"><div class="kc-label g">لو غيرنا اسم الملف</div>' +
+                            '<p class="ar" style="font-size:var(--fs-small)">لو سمينا الملف <code class="ic">test.php</code> بدل <code class="ic">index.php</code>:</p>' +
+                            '<span class="snip">localhost/learn-php/test.php</span>' +
+                            '<p class="ar" style="font-size:var(--fs-small);margin-top:10px">لازم نكتب اسمه في الـ URL علشان نوصل له.</p></div>' +
+                            "</div>" +
+                            khulasa(
+                                '<code class="ic">index.php</code> اسم خاص الـ Server بيفهمه تلقائي — أي اسم تاني لازم يتكتب في الـ URL.'
+                            )
+                    ),
+
+                () =>
+                    S(
+                        {
+                            n: 12,
+                            part: "C",
+                            toc: 12,
+                            title: 'الـ <span class="m">echo</span> والـ Quotes'
+                        },
+                        '<div class="cols"><div class="col" style="justify-content:center">' +
+                            '<div class="card dg-card" style="min-height:120px"><span class="snip g" style="margin:0;font-size:calc(var(--fs-code)*1.1)">echo(\'hello !\');</span></div>' +
+                            '<div class="card dg-card" style="min-height:140px;margin-top:13px">' +
+                            '<div class="h-flow">' +
+                            '<div class="node n-class" style="padding:9px 18px 11px"><span class="n-main mono">echo</span><span class="n-tag">لعرض الـ Data</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node n-obj" style="padding:9px 18px 11px"><span class="n-main mono">\'hello !\'</span><span class="n-tag">String</span></div>' +
+                            "</div></div>" +
+                            '</div><div class="col" style="justify-content:center">' +
+                            shc(
+                                'الـ <code class="ic">echo</code> هو Construct / Command خاص في PHP بنستخدمه علشان نعرض Data.',
+                                'والـ Quotes بتوضح إن القيمة دي عبارة عن Text — يعني <code class="ic">String</code>.'
+                            ) +
+                            muhem(
+                                'الـ <code class="ic">echo</code> مش بيتنفذ لوحده — هو محتاج قيمة يعرضها، والـ Quotes هي اللي بتحدد القيمة دي كنص.'
+                            ) +
+                            "</div></div>"
+                    ),
+
+                () =>
+                    S(
+                        {
+                            n: 13,
+                            part: "C",
+                            toc: 13,
+                            status: "bad",
+                            title: 'ليه لازم نستخدم <span class="m">Quotes</span> مع الـ String؟'
+                        },
+                        '<div class="cols" style="grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.5fr);">' +
+                            '<div class="col">' +
+                            codebox("test.php", C.s13w, { redHl: [3] }) +
+                            "</div>" +
+                            '<div class="col" style="gap: 12px;">' +
+                            '<div class="blk-label err" style="margin-top: 0;">ERROR OUTPUT</div>' +
+                            '<div class="errslot">' +
+                            errPanel(E13, [['unexpected token "!"'], ["on line 3"]]) +
+                            "</div>" +
+                            '<div class="card" style="border: 1px solid rgba(78, 212, 164, 0.25); background: rgba(78, 212, 164, 0.04); border-left: 3px solid var(--good); border-right: 1px solid rgba(78, 212, 164, 0.25); padding: 12px 16px; border-radius: 12px; margin-top: 4px;">' +
+                            '<div class="kc-label g" style="color: var(--good); font-size: 13px; margin-bottom: 6px; text-align: left; direction: ltr;">بالعربي</div>' +
+                            '<p class="ar" style="font-size: var(--fs-small); line-height: 1.8; margin-bottom: 6px;">' +
+                            'PHP شايفة <code class="ic g">hello !</code> — لكن مفيش Quotes بتقول إن ده Text / String.' +
+                            "</p>" +
+                            '<p class="ar" style="font-size: var(--fs-small); line-height: 1.8; margin-bottom: 6px;">' +
+                            'فـ PHP بتحاول تتعامل مع الكلام على إنه Code، ولما توصل لـ <code class="ic">!</code> تلاقيه في مكان مش متوقع.' +
+                            "</p>" +
+                            '<p class="ar" style="font-size: var(--fs-small); line-height: 1.8;">' +
+                            'علشان كده ظهر <code class="ic">Parse error</code>.' +
+                            "</p>" +
+                            '<div style="margin-top: 10px; font-family: Cairo; color: var(--faint); font-size: var(--fs-small); text-align: right;">✅ الصح</div>' +
+                            '<div style="display:flex; flex-direction:column; gap:6px; margin-top:6px; align-items: flex-end;">' +
+                            '<span class="snip g" style="margin:0; padding: 6px 12px; font-size: 14px; width:fit-content;">echo(\'hello !\');</span>' +
+                            '<span class="snip g" style="margin:0; padding: 6px 12px; font-size: 14px; width:fit-content;">echo("hello !");</span>' +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>"
+                    ),
+                () =>
+                    S(
+                        {
+                            n: 14,
+                            part: "C",
+                            toc: 14,
+                            status: "bad",
+                            title: 'الـ <span class="m">Semicolon</span> <span class="m">;</span>'
+                        },
+                        '<div class="cols">' +
+                            '<div class="col" style="gap: 12px;">' +
+                            '<div class="blk-label err" style="margin-top: 0;">❌ الكود</div>' +
+                            codebox("test.php", C.s14w, { redHl: [3] }) +
+                            '<div class="blk-label ok" style="margin-top: 4px;">✅ الصح</div>' +
+                            codebox("test.php", C.s14ok, { hl: [3, 4] }) +
+                            "</div>" +
+                            '<div class="col" style="justify-content:center; gap: 12px;">' +
+                            '<div class="blk-label err" style="margin-top: 0;">رسالة الخطأ</div>' +
+                            '<div class="errslot">' +
+                            errPanel(E14, [
+                                ['unexpected token "echo", expecting "," or ";"'],
+                                ["on line 4"]
+                            ]) +
+                            "</div>" +
+                            muhem(
+                                'الـ Semicolon <code class="ic">;</code> بيستخدم لإنهاء <b>Statement</b> في PHP — هو بينهي الـ Statement، مش بينهي "السطر".'
+                            ) +
+                            leh(
+                                'PHP لما خلصت أول Statement ملقتش <code class="ic">;</code>، فاستننت <code class="ic">;</code> أو <code class="ic">,</code> — ولقت <code class="ic">echo</code> في مكان مش متوقع، فطلعت <code class="ic">Parse error</code>.'
+                            ) +
+                            "</div>" +
+                            "</div>"
+                    ),
+                () =>
+                    S(
+                        { n: 15, part: "C", toc: 15, title: "ترتيب تنفيذ الكود" },
+                        '<div class="cols"><div class="col">' +
+                            codebox("test.php", C.s15, { hl: [3, 4] }) +
+                            '<div class="blk-label out" style="margin-top:12px">الناتج</div>' +
+                            browserOut(["hello Mohamed"]) +
+                            '</div><div class="col" style="justify-content:center">' +
+                            shc(
+                                "PHP بشكل عام بتنفذ الـ Statements حسب <b>ترتيبها</b> في الـ Source Code — من فوق لتحت.",
+                                'أول <code class="ic">echo</code> طبع <code class="ic g">"hello "</code>، وبعده <code class="ic">echo</code> طبع <code class="ic g">"Mohamed"</code> — فالناتج طلع في سطر واحد ورا بعض.'
+                            ) +
+                            khulasa("التنفيذ بيتم بالترتيب: أول سطر كتبناه بيتنفذ الأول.") +
+                            "</div></div>"
+                    ),
+
+                () =>
+                    S(
+                        {
+                            n: 16,
+                            part: "C",
+                            toc: 16,
+                            title: 'إيه هو <span class="m">&lt;br&gt;</span>؟'
+                        },
+                        '<div class="cols"><div class="col">' +
+                            codebox("test.php", C.s16, { hl: [2, 3] }) +
+                            '<div class="blk-label out" style="margin-top:12px">الناتج</div>' +
+                            browserOut(["hello", "Mohamed"]) +
+                            '</div><div class="col" style="justify-content:center">' +
+                            shc(
+                                'الـ <code class="ic">&lt;br&gt;</code> هو <b>HTML Tag</b> بيعمل Line Break — وهو <b>مش PHP</b>.',
+                                'PHP بتطبع <code class="ic">&lt;br&gt;</code> كنص عادي، والـ <b>Browser</b> هو اللي بيفهمه كـ Line Break وينزل سطر جديد.'
+                            ) +
+                            '<div class="cap-row"><span class="chip viol">br = Line Break</span></div>' +
+                            khulasa("PHP بتطبع — والـ Browser هو اللي بيفهم الـ HTML.") +
+                            "</div></div>"
+                    ),
+
+                () =>
+                    S(
+                        {
+                            n: 17,
+                            part: "C",
+                            toc: 17,
+                            title: 'أكتر من <span class="m">PHP Tag</span> في نفس الملف'
+                        },
+                        '<div class="cols"><div class="col">' +
+                            codebox("test.php", C.s17, { hl: [1, 3, 6, 8] }) +
+                            '<div class="blk-label out" style="margin-top:12px">الناتج</div>' +
+                            browserOut(["Hello", "Mohamed"]) +
+                            '</div><div class="col" style="justify-content:center">' +
+                            shc(
+                                "ممكن يكون عندنا <b>أكتر من PHP Block</b> في نفس الملف.",
+                                "وكل Block بيتنفذ حسب <b>ترتيب ظهوره</b> في الملف — الأول الأول، وبعده اللي بعده."
+                            ) +
+                            '<div class="dg-wrap" style="margin-top:6px">' +
+                            '<div class="h-flow">' +
+                            '<div class="node n-class" style="padding:8px 16px 10px"><span class="n-main mono">&lt;?php ?&gt; 1</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node n-class" style="padding:8px 16px 10px"><span class="n-main mono">&lt;?php ?&gt; 2</span></div>' +
+                            "</div></div>" +
+                            "</div></div>"
+                    ),
+
+                () =>
+                    S(
+                        { n: 18, part: "D", toc: 18, title: 'الـ <span class="m">Comments</span>' },
+                        '<div class="cols"><div class="col">' +
+                            codebox("test.php", C.s18, { hl: [3] }) +
+                            '</div><div class="col">' +
+                            leh(
+                                "ممكن مبرمج يعمل Implementation معقدة لسبب معين، وبعد فترة مبرمج تاني يفتح الكود وميفهمش ليه الطريقة دي اتعملت.",
+                                'الـ <code class="ic">Comment</code> ممكن يوضح السبب للمبرمج اللي هيقرا الكود بعدك.'
+                            ) +
+                            shc(
+                                'الـ <code class="ic">//</code> بتعمل <b>Single-Line Comment</b>.',
+                                "PHP بتتجاهل الـ Comment أثناء التنفيذ — هي بتشيله من الحسبة.",
+                                "الـ Comment موجه <b>للمبرمجين</b>، مش للـ PHP."
+                            ) +
+                            "</div></div>"
+                    ),
+
+                () =>
+                    S(
+                        {
+                            n: 19,
+                            part: "D",
+                            toc: 19,
+                            title: 'الـ <span class="m">Comments</span> على أكتر من سطر'
+                        },
+                        '<div class="cols"><div class="col">' +
+                            codebox("test.php", C.s19, { hl: [3, 4, 5, 6, 7] }) +
+                            '</div><div class="col" style="justify-content:center">' +
+                            shc(
+                                "لما يكون عندك شرح طويل أو أوضح فكرة على أكتر من سطر — بنستخدم الـ Multi-Line Comment.",
+                                'كل اللي بين <code class="ic">/*</code> و <code class="ic">*/</code> بيتجاهل بالكامل أثناء التنفيذ.'
+                            ) +
+                            '<div class="card dg-card" style="min-height:110px;margin-top:4px">' +
+                            '<div class="h-flow">' +
+                            '<div class="node" style="padding:9px 16px 11px"><span class="n-main mono">//</span><span class="n-tag">سطر واحد</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node" style="padding:9px 16px 11px"><span class="n-main mono">/* */</span><span class="n-tag">أكتر من سطر</span></div>' +
+                            "</div></div>" +
+                            "</div></div>"
+                    ),
+
+                () =>
+                    S(
+                        {
+                            n: 20,
+                            part: "D",
+                            toc: 20,
+                            title: 'الفرق بين <span class="m">//</span> و <span class="m">/* */</span>'
+                        },
+                        '<div class="duo" style="flex:1;min-height:0">' +
+                            '<div class="col">' +
+                            '<div class="blk-label ok">// — لحد نهاية السطر</div>' +
+                            codebox("test.php", C.s20a, { hl: [3] }) +
+                            '<div class="arcard" dir="rtl" style="flex:1; display:flex; flex-direction:column; justify-content:center;">' +
+                            '<div class="tag">شرح</div>' +
+                            '<p class="ar">الـ <code class="ic">//</code> بتبدأ Comment وبتستمر لحد <b>نهاية نفس السطر</b> — اللي بعدها بيتنفذ عادي.</p>' +
+                            "</div>" +
+                            "</div>" +
+                            '<div class="col">' +
+                            '<div class="blk-label ok">/* */ — في منتصف السطر</div>' +
+                            codebox("test.php", C.s20b, { hl: [2] }) +
+                            '<div class="arcard" dir="rtl" style="flex:1; display:flex; flex-direction:column; justify-content:center;">' +
+                            '<div class="tag">شرح</div>' +
+                            '<p class="ar">الـ <code class="ic">/* */</code> بتبدأ بـ <code class="ic">/*</code> وبتنتهي عند <code class="ic">*/</code> — وممكن تكون في <b>منتصف السطر</b> والكود يكمل بعدها عادي.</p>' +
+                            "</div>" +
+                            "</div></div>" +
+                            muhem(
+                                'لو الـ <code class="ic">/*</code> اتفتحت وماتقفلتش — كل اللي بعدها بيتعامل كـ Comment لحد نهاية الـ PHP File!'
+                            ) +
+                            '<div class="cap-row"><span class="chip ar">// → نهاية السطر</span><span class="chip viol">/* → */</span></div>'
+                    ),
+
+                () =>
+                    S(
+                        {
+                            n: 21,
+                            part: "E",
+                            toc: 21,
+                            title: 'الـ <span class="m">Data Types</span>'
+                        },
+                        '<div class="card dg-card" style="min-height:100px">' +
+                            '<div class="h-flow">' +
+                            '<div class="node" style="padding:9px 18px 11px"><span class="n-main mono">Data</span><span class="n-tag">بيانات</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node" style="padding:9px 18px 11px"><span class="n-main mono">Type</span><span class="n-tag">نوع</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node n-class" style="padding:9px 18px 11px"><span class="n-main mono">Data Type</span><span class="n-tag">نوع البيانات</span></div>' +
+                            "</div></div>" +
+                            '<div class="dtable" style="margin-top:14px">' +
+                            '<div class="dr dh"><div>Data Type</div><div>المعنى</div></div>' +
+                            '<div class="dr"><div>String</div><div>نص</div></div>' +
+                            '<div class="dr"><div>Integer</div><div>رقم صحيح</div></div>' +
+                            '<div class="dr"><div>Float</div><div>رقم عشري</div></div>' +
+                            '<div class="dr"><div>Boolean</div><div>قيمة منطقية: صح أو غلط</div></div>' +
+                            '<div class="dr"><div>Array</div><div>مجموعة من البيانات</div></div>' +
+                            '<div class="dr"><div>Object</div><div>كائن</div></div>' +
+                            '<div class="dr"><div>NULL</div><div>عدم وجود قيمة</div></div>' +
+                            '<div class="dr"><div>Resource</div><div>مورد خارجي</div></div>' +
+                            "</div>" +
+                            molahaza(
+                                "دي مجرد Introduction للـ Data Types — هناخد كل نوع عملي في الأمثلة الجاية."
+                            )
+                    ),
+
+                () =>
+                    S(
+                        {
+                            n: 22,
+                            part: "E",
+                            toc: 22,
+                            title: 'الـ <span class="m">gettype()</span> Function'
+                        },
+                        shc(
+                            'الـ <code class="ic">gettype()</code> هي Function في PHP بنستخدمها علشان <b>تعرفنا نوع الـ Data</b> أو القيمة اللي بنفحصها.'
+                        ) +
+                            '<div class="card" style="margin-top:14px"><div class="kc-label v">ممكن ترجع الأنواع دي</div>' +
+                            '<div class="chips" style="margin-top:0">' +
+                            '<span class="chip">string</span><span class="chip">integer</span><span class="chip">double</span>' +
+                            '<span class="chip">boolean</span><span class="chip">array</span><span class="chip">object</span>' +
+                            '<span class="chip">NULL</span><span class="chip">resource</span>' +
+                            "</div></div>" +
+                            '<div class="dg-wrap" style="min-height:120px">' +
+                            '<div class="h-flow">' +
+                            '<div class="node" style="padding:9px 18px 11px"><span class="n-main">أي قيمة</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node n-class" style="padding:9px 18px 11px"><span class="n-main mono">gettype()</span></div>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<div class="node n-obj" style="padding:9px 18px 11px"><span class="n-main">نوع الـ Data</span></div>' +
+                            "</div></div>"
+                    ),
+
+                () =>
+                    S(
+                        { n: 23, part: "E", toc: 23, title: 'الـ <span class="m">String</span>' },
+                        '<div class="cols"><div class="col">' +
+                            codebox("test.php", C.s23, { hl: [3, 6] }) +
+                            '<div class="blk-label out" style="margin-top:12px">الناتج</div>' +
+                            browserOut(["Hello", "string"]) +
+                            '</div><div class="col">' +
+                            shc(
+                                'الـ <code class="ic">String</code> يعني <b>نص</b> — ممكن يكون حروف أو كلمات أو جمل.',
+                                'والـ String بيتكتب بين <code class="ic">\' \'</code> أو <code class="ic">" "</code>.'
+                            ) +
+                            '<div class="card" dir="rtl"><div class="kc-label">إيه اللي حصل؟</div>' +
+                            '<div class="tp-list" style="display:flex;flex-direction:column;gap:7px">' +
+                            '<div class="mm-row" style="padding:7px 12px"><span class="sig">echo</span><span class="trg">بتعرض الـ Data على الشاشة.</span></div>' +
+                            '<div class="mm-row" style="padding:7px 12px"><span class="sig">gettype()</span><span class="trg">بتحدد نوع الـ Data اللي بنفحصها.</span></div>' +
+                            '<div class="mm-row" style="padding:7px 12px"><span class="sig">"Hello"</span><span class="trg">عبارة عن String — عشان كده النوع طلع string.</span></div>' +
+                            "</div></div>" +
+                            "</div></div>"
+                    ),
+
+                () =>
+                    S(
+                        { n: 24, part: "E", toc: 24, title: 'الـ <span class="m">Integer</span>' },
+                        '<div class="cols"><div class="col">' +
+                            codebox("test.php", C.s24, { hl: [3, 6] }) +
+                            '<div class="blk-label out" style="margin-top:12px">الناتج</div>' +
+                            browserOut(["25", "integer"]) +
+                            '</div><div class="col">' +
+                            shc(
+                                'الـ <code class="ic">Integer</code> يعني <b>رقم صحيح</b> — يعني رقم مفيهوش جزء عشري.',
+                                "وخد بالك: بنكتبه <b>من غير Quotes</b> — لأنه رقم مش نص."
+                            ) +
+                            '<div class="card" style="margin-top:4px"><div class="kc-label">أمثلة على Integer</div>' +
+                            '<div class="chips" style="margin-top:0"><span class="chip blue">10</span><span class="chip blue">25</span><span class="chip blue">0</span><span class="chip blue">-5</span><span class="chip blue">100</span></div></div>' +
+                            khulasa(
+                                '<code class="ic">25</code> → Integer — عشان كده <code class="ic">gettype()</code> رجعت <code class="ic g">integer</code>.'
+                            ) +
+                            "</div></div>"
+                    ),
+
+                () =>
+                    S(
+                        { n: 25, part: "E", toc: 25, title: 'الـ <span class="m">Float</span>' },
+                        '<div class="cols"><div class="col">' +
+                            codebox("test.php", C.s25, { hl: [3, 6] }) +
+                            '<div class="blk-label out" style="margin-top:12px">الناتج</div>' +
+                            browserOut(["25.5", "double"]) +
+                            '</div><div class="col">' +
+                            shc(
+                                'الـ <code class="ic">Float</code> يعني <b>رقم عشري</b> — يعني فيه جزء عشري بعد العلامة العشرية.'
+                            ) +
+                            '<div class="card" style="margin-top:4px"><div class="kc-label">أمثلة على Float</div>' +
+                            '<div class="chips" style="margin-top:0"><span class="chip blue">10.5</span><span class="chip blue">3.14</span><span class="chip blue">0.75</span></div></div>' +
+                            muhem(
+                                'لاحظ إن PHP بتستخدم <code class="ic">double</code> كـ Type Name للقيمة الرقمية العشرية — وده اللي بنشوفه من خلال <code class="ic">gettype()</code>.'
+                            ) +
+                            "</div></div>"
+                    ),
+
+                () =>
+                    S(
+                        { n: 26, part: "E", toc: 26, title: 'الـ <span class="m">Boolean</span>' },
+                        '<div class="cols"><div class="col">' +
+                            codebox("test.php", C.s26, { hl: [3, 6] }) +
+                            '<div class="blk-label out" style="margin-top:12px">الناتج</div>' +
+                            browserOut(["1", "boolean"]) +
+                            '</div><div class="col">' +
+                            shc(
+                                'الـ <code class="ic">Boolean</code> هو نوع من أنواع البيانات بيكون عنده <b>حالتين فقط</b>: <code class="ic g">true</code> أو <code class="ic">false</code>.',
+                                'ممكن نفهمهم بشكل مبسط: <code class="ic g">true → 1</code> و <code class="ic">false → 0</code>.'
+                            ) +
+                            '<div class="card" dir="rtl"><div class="kc-label g">Scenario — هل الموظف حضر النهارده؟</div>' +
+                            '<div class="mm-grid" style="gap:8px">' +
+                            '<div class="mm-row" style="padding:7px 12px; display:flex; justify-content:center; align-items:center; gap:10px; direction:rtl;">' +
+                            '<span class="sig" style="color:var(--good); text-align:center;">true → 1</span>' +
+                            '<span class="trg" style="text-align:center;">حضر ✓</span>' +
+                            "</div>" +
+                            '<div class="mm-row" style="padding:7px 12px; display:flex; justify-content:center; align-items:center; gap:10px; direction:rtl;">' +
+                            '<span class="sig" style="color:#EFA1A1; text-align:center;">false → 0</span>' +
+                            '<span class="trg" style="text-align:center;">محضرش ✕</span>' +
+                            "</div>" +
+                            "</div></div>" +
+                            '<div class="card dg-card" style="min-height:90px;padding:12px">' +
+                            '<span class="snip" style="margin:0">echo(false);</span>' +
+                            '<div class="h-arrow">' +
+                            SVG_H +
+                            "</div>" +
+                            '<span class="chip gold">الناتج: 0</span>' +
+                            "</div>" +
+                            "</div></div>"
+                    )
+            ]
+
+            const tocTitles = [
+                "يعني إيه Programming؟",
+                "إزاي بنتواصل مع الكمبيوتر؟",
+                "هتبقى إيه بعد ما تتعلم البرمجة؟",
+                "إيه المطلوب منك في الكورس؟",
+                "إزاي الكمبيوتر بيفهم الكود؟",
+                "إيه هو Code Editor؟",
+                "الـ PHP Tag",
+                "ليه كود PHP مش بيتنفذ؟",
+                "مكان ملفات PHP في XAMPP",
+                "إزاي نوصل لمشروع PHP؟",
+                "الـ Default Document",
+                "الـ echo والـ Quotes",
+                "ليه لازم Quotes مع الـ String؟",
+                "الـ Semicolon ;",
+                "ترتيب تنفيذ الكود",
+                "إيه هو br Tag؟",
+                "أكتر من PHP Tag في الملف",
+                "الـ Comments",
+                "Comments على أكتر من سطر",
+                "الفرق بين // و /* */",
+                "الـ Data Types",
+                "الـ gettype() Function",
+                "الـ String",
+                "الـ Integer",
+                "الـ Float",
+                "الـ Boolean"
+            ]
+            const sectionSlides = builders.map((f) => f())
+            const tocStart = {}
+            let ctr = 2
+            sectionSlides.forEach((html) => {
+                const m = html.match(/data-toc="(\d+)"/)
+                if (m && !(m[1] in tocStart)) tocStart[m[1]] = ctr
+                ctr++
+            })
+            const tocSlide =
+                '<div class="slide">' +
+                headPlain("محتويات الكورس") +
+                '<div class="s-body"><div class="toc-grid">' +
+                tocTitles
+                    .map(
+                        (t, i) =>
+                            '<div class="toc-item" data-go="' +
+                            (tocStart[i + 1] || 0) +
+                            '"><span class="t-num">' +
+                            pad(i + 1) +
+                            '</span><span class="tt">' +
+                            t +
+                            "</span></div>"
+                    )
+                    .join("") +
+                "</div></div></div>"
+
+            const recapItems = [
+                ["Programming", "إعطاء الكمبيوتر مجموعة من التعليمات"],
+                ["Programming Language", "طريقة بنتواصل بيها مع الكمبيوتر"],
+                ["PHP", "Server-Side Programming Language"],
+                ["<?php ?>", "الـ PHP Tag — بداية ونهاية الكود"],
+                ["Code Editor", "المكان اللي بنكتب فيه الـ Code"],
+                ["echo", "عرض الـ Data"],
+                ["String", "نص"],
+                ["Integer", "رقم صحيح"],
+                ["Float", "رقم عشري"],
+                ["Boolean", "true / false"],
+                ["gettype()", "معرفة الـ Data Type"],
+                ["//  و  /* */", "Comments — لنهاية السطر · لحد الـ Closing Marker"]
+            ]
+            const recapSlide =
+                '<div class="slide">' +
+                headPlain("💡 الخلاصة — اللي اتعلميناه في الكورس") +
+                '<div class="s-body">' +
+                '<div class="mm-grid" style="flex:1;align-content:center">' +
+                recapItems
+                    .map(
+                        (it) =>
+                            '<div class="mm-row"><span class="sig">' +
+                            it[0] +
+                            '</span><span class="trg">' +
+                            it[1] +
+                            "</span></div>"
+                    )
+                    .join("") +
+                "</div>" +
+                card(
+                    "",
+                    "note-key viol",
+                    "كده أسّسنا أهم المفاهيم في PHP — من غير ما نقفز لأي حاجة متقدمة. التعليمات دي هي الأساس اللي هنبني عليه كل حاجة جاية."
+                ) +
+                '<div class="signoff"><span class="logo">' +
+                LOGO +
+                "</span>INFINITY CODE</div>" +
+                "</div></div>"
+
+            const closingSlide =
+                '<div class="slide title-slide"><div class="s-body"><div class="t-wrap">' +
+                '<span class="t-over">END OF PHP FUNDAMENTALS</span>' +
+                '<h1 class="t-title" style="font-size:calc(var(--fs-hero)*.72)">كمل تعلّم… <span>والبرمجة تحلو لك</span></h1>' +
+                '<div class="t-flow" style="margin-top:36px">' +
+                '<div class="node n-class"><span class="n-main">افهم</span></div>' +
+                '<div class="h-arrow">' +
+                SVG_H +
+                "</div>" +
+                '<div class="node"><span class="n-main">طبّق</span></div>' +
+                '<div class="h-arrow">' +
+                SVG_H +
+                "</div>" +
+                '<div class="node n-lock"><span class="n-main">اغلط</span></div>' +
+                '<div class="h-arrow">' +
+                SVG_H +
+                "</div>" +
+                '<div class="node"><span class="n-main">صحّح</span></div>' +
+                '<div class="h-arrow">' +
+                SVG_H +
+                "</div>" +
+                '<div class="node n-self"><span class="n-main">كرر</span></div>' +
+                "</div>" +
+                '<div class="signoff"><span class="logo">' +
+                LOGO +
+                "</span>INFINITY CODE</div>" +
+                "</div></div></div>"
+
+            const stage = document.getElementById("stage")
+            stage.innerHTML = [
+                titleSlide,
+                tocSlide,
+                ...sectionSlides,
+                recapSlide,
+                closingSlide
+            ].join("")
+            document.getElementById("logo1").innerHTML = LOGO
+
+            const slideEls = [...stage.querySelectorAll(".slide")]
+            const TOTAL = slideEls.length
+
+            slideEls.forEach((sl) => {
+                sl.querySelectorAll(".s-body>*, .col>*, .duo>*").forEach((c, i) =>
+                    c.style.setProperty("--i", Math.min(i, 8))
+                )
+            })
+
+            const counterEl = document.getElementById("counter")
+            const sectChip = document.getElementById("sectChip")
+            const footSect = document.getElementById("footSect")
+            const progEl = document.getElementById("prog")
+            const btnPrev = document.getElementById("btnPrev")
+            const btnNext = document.getElementById("btnNext")
+            const toastEl = document.getElementById("toast")
+
+            let cur = -1
+
+            function fitPane(pane) {
+                const sc = pane.querySelector(".code-scroll")
+                if (!sc) return
+                const pre = sc.querySelector("pre")
+                pre.style.fontSize = ""
+                sc.scrollTop = 0
+                let fs = parseFloat(getComputedStyle(pre).fontSize)
+                const MIN = 13
+                let guard = 40
+                while (fs > MIN && guard-- > 0) {
+                    pre.style.fontSize = fs + "px"
+                    if (sc.scrollHeight <= sc.clientHeight + 2) break
+                    fs -= 0.5
+                }
+                if (fs <= MIN) pre.style.fontSize = MIN + "px"
+            }
+            function fitSlide(sl) {
+                if (!sl) return
+                sl.querySelectorAll(".code-scroll").forEach((sc) => {
+                    const pre = sc.querySelector("pre")
+                    pre.style.fontSize = ""
+                    sc.scrollTop = 0
+                    let fs = parseFloat(getComputedStyle(pre).fontSize)
+                    const MIN = 13
+                    let guard = 40
+                    while (fs > MIN && guard-- > 0) {
+                        pre.style.fontSize = fs + "px"
+                        if (sc.scrollHeight <= sc.clientHeight + 2) break
+                        fs -= 0.5
+                    }
+                    if (fs <= MIN) pre.style.fontSize = MIN + "px"
+                })
+            }
+
+            function update() {
+                counterEl.textContent = pad(cur + 1) + " / " + pad(TOTAL)
+                const p = slideEls[cur].dataset.part
+                const name =
+                    p ? SECT[p]
+                    : (
+                        slideEls[cur].querySelector(".k-num") &&
+                        slideEls[cur].querySelector(".k-num").textContent === "مراجعة"
+                    ) ?
+                        "المراجعة"
+                    :   ""
+                sectChip.textContent = name
+                sectChip.style.display = name ? "" : "none"
+                footSect.textContent = name
+                progEl.style.width = ((cur + 1) / TOTAL) * 100 + "%"
+                btnPrev.disabled = cur === 0
+                btnNext.disabled = cur === TOTAL - 1
+                try {
+                    history.replaceState(null, "", "#" + (cur + 1))
+                } catch (e) {}
+            }
+
+            function go(n, dir) {
+                n = Math.max(0, Math.min(TOTAL - 1, n))
+                if (n === cur) return
+                const fwd = dir !== undefined ? dir > 0 : n > cur
+                if (cur >= 0) {
+                    const o = slideEls[cur]
+                    o.classList.toggle("pos-left", fwd)
+                    o.classList.remove("active")
+                }
+                const el = slideEls[n]
+                el.classList.toggle("pos-left", !fwd)
+                void el.offsetWidth
+                el.classList.add("active")
+                el.classList.remove("pos-left")
+                el.scrollTop = 0
+                cur = n
+                update()
+                requestAnimationFrame(() => fitSlide(el))
+            }
+            const next = () => go(cur + 1, 1)
+            const prev = () => go(cur - 1, -1)
+
+            let scale = 1
+            let toastTimer
+            function toast(msg) {
+                toastEl.textContent = msg
+                toastEl.classList.add("show")
+                clearTimeout(toastTimer)
+                toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1300)
+            }
+            function zoom(d) {
+                scale = d === 0 ? 1 : Math.min(1.6, Math.max(0.7, +(scale + d * 0.05).toFixed(2)))
+                document.documentElement.style.setProperty("--scale", scale)
+                toast("حجم الخط: " + Math.round(scale * 100) + "%")
+                fitSlide(slideEls[cur])
+            }
+
+            function isFS() {
+                return !!(
+                    document.fullscreenElement ||
+                    document.webkitFullscreenElement ||
+                    document.mozFullScreenElement ||
+                    document.msFullscreenElement
+                )
+            }
+            function toggleFS() {
+                if (isFS()) {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen()
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen()
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen()
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen()
+                    }
+                } else {
+                    const elem = document.documentElement
+                    if (elem.requestFullscreen) {
+                        elem.requestFullscreen().catch(() => {})
+                    } else if (elem.webkitRequestFullscreen) {
+                        elem.webkitRequestFullscreen()
+                    } else if (elem.mozRequestFullScreen) {
+                        elem.mozRequestFullScreen()
+                    } else if (elem.msRequestFullscreen) {
+                        elem.msRequestFullscreen()
+                    }
+                }
+            }
+            btnPrev.addEventListener("click", () => {
+                prev()
+                btnPrev.blur()
+            })
+            btnNext.addEventListener("click", () => {
+                next()
+                btnNext.blur()
+            })
+            document.getElementById("btnPlus").addEventListener("click", (e) => {
+                zoom(1)
+                e.currentTarget.blur()
+            })
+            document.getElementById("btnMinus").addEventListener("click", (e) => {
+                zoom(-1)
+                e.currentTarget.blur()
+            })
+            document.getElementById("btnFs").addEventListener("click", (e) => {
+                toggleFS()
+                e.currentTarget.blur()
+            })
+
+            stage.addEventListener("click", (e) => {
+                const t = e.target.closest("[data-go]")
+                if (t) go(+t.dataset.go, +t.dataset.go > cur ? 1 : -1)
+            })
+
+            document.addEventListener("click", (e) => {
+                const copyBtn = e.target.closest(".cb-copy")
+                if (!copyBtn) return
+                const codebox = copyBtn.closest(".codebox")
+                const codeEl = codebox.querySelector(".code-scroll pre code")
+                if (codeEl) {
+                    const lines = [...codeEl.querySelectorAll(".cl")]
+                        .map((cl) => cl.textContent.replace(/\u200B/g, "").trimEnd())
+                        .join("\n")
+
+                    navigator.clipboard
+                        .writeText(lines)
+                        .then(() => {
+                            const originalHTML = copyBtn.innerHTML
+                            copyBtn.innerHTML =
+                                '<svg viewBox="0 0 24 24" style="stroke: var(--good);"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+                            copyBtn.classList.add("copied")
+                            toast("تم نسخ الكود بنجاح!")
+                            setTimeout(() => {
+                                copyBtn.innerHTML = originalHTML
+                                copyBtn.classList.remove("copied")
+                            }, 2000)
+                        })
+                        .catch((err) => {
+                            console.error("Copy failed", err)
+                        })
+                }
+            })
+
+            window.addEventListener("keydown", (e) => {
+                if (e.ctrlKey || e.metaKey || e.altKey) return
+                switch (e.key) {
+                    case "ArrowRight":
+                    case "PageDown":
+                    case " ":
+                        e.preventDefault()
+                        next()
+                        break
+                    case "ArrowLeft":
+                    case "PageUp":
+                    case "Backspace":
+                        e.preventDefault()
+                        prev()
+                        break
+                    case "Escape":
+                        if (isFS())
+                            (document.exitFullscreen || document.webkitExitFullscreen).call(
+                                document
+                            )
+                        break
+                    case "Home":
+                        e.preventDefault()
+                        go(0, -1)
+                        break
+                    case "End":
+                        e.preventDefault()
+                        go(TOTAL - 1, 1)
+                        break
+                    case "+":
+                    case "=":
+                        zoom(1)
+                        break
+                    case "-":
+                    case "_":
+                        zoom(-1)
+                        break
+                    case "0":
+                        zoom(0)
+                        break
+                    case "f":
+                    case "F":
+                    case "ب":
+                        e.preventDefault()
+                        toggleFS()
+                        break
+                }
+            })
+
+            let tx = 0,
+                ty = 0
+            window.addEventListener(
+                "touchstart",
+                (e) => {
+                    tx = e.touches[0].clientX
+                    ty = e.touches[0].clientY
+                },
+                { passive: true }
+            )
+            window.addEventListener(
+                "touchend",
+                (e) => {
+                    const dx = e.changedTouches[0].clientX - tx
+                    const dy = e.changedTouches[0].clientY - ty
+                    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) dx < 0 ? next() : prev()
+                },
+                { passive: true }
+            )
+
+            let rzTimer
+            window.addEventListener("resize", () => {
+                clearTimeout(rzTimer)
+                rzTimer = setTimeout(() => fitSlide(slideEls[cur]), 150)
+            })
+            document.addEventListener("fullscreenchange", () =>
+                setTimeout(() => fitSlide(slideEls[cur]), 120)
+            )
+            if (document.fonts && document.fonts.ready)
+                document.fonts.ready.then(() => fitSlide(slideEls[cur]))
+
+            const startFrom = Math.min(
+                TOTAL,
+                Math.max(1, parseInt((location.hash.match(/\d+/) || [1])[0], 10))
+            )
+            go(startFrom - 1, 1)
+        </script>
+    </body>
+</html>
